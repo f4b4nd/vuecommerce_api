@@ -16,16 +16,16 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
+SECRET_KEY = os.environ.get('DEBUG', "")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'uv(n250+ot1ay2pftk(ya55phx3*y+j389f7-0oz3kjxevpo!b'
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False) == 'TRUE'
+TEMPLATE_DEBUG = os.environ.get('TEMPLATE_DEBUG', False) == 'TRUE'
+DEBUG_PROPAGATE_EXCEPTIONS = os.environ.get('DEBUG_PROPAGATE_EXCEPTIONS', False) == 'TRUE'
 
-ALLOWED_HOSTS = []
+CORS_ALLOW_CREDENTIALS = os.environ.get('CORS_ALLOW_CREDENTIALS', False) == 'TRUE'
+CORS_ORIGIN_WHITELIST =  os.environ.get('CORS_ORIGIN_WHITELIST', '').split(',')
 
 
 # Application definition
@@ -37,7 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'core',
+    'rest_framework',
+    'corsheaders',
+
 ]
 
 MIDDLEWARE = [
