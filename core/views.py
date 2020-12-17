@@ -1,9 +1,20 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse, HttpResponse
+from django.core import serializers
+from django.views.decorators.http import require_http_methods
 from rest_framework import viewsets
 
-from .models import Product
+from .models import Product, Information
 from .serializers import ProductSerializer
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+
+
+@require_http_methods(["GET"])
+def InformationView(request, slug):
+    obj = get_object_or_404(Information, slug=slug)
+    serialized_obj = serializers.serialize('json', [ obj, ])
+    status = "200"
+    return HttpResponse(serialized_obj)
