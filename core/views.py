@@ -15,6 +15,6 @@ class ProductViewSet(viewsets.ModelViewSet):
 @require_http_methods(["GET"])
 def InformationView(request, slug):
     obj = get_object_or_404(Information, slug=slug)
-    serialized_obj = serializers.serialize('json', [ obj, ])
-    status = "200"
-    return HttpResponse(serialized_obj)
+    serialized_obj = serializers.serialize('json', [ obj, ], ensure_ascii=False)
+    status = 200
+    return JsonResponse(serialized_obj[1:-1], safe=False)
