@@ -33,19 +33,32 @@ def InformationView(request, slug):
 if settings.DEBUG: 
 
     from django.core.files import File
-    import os, random
+    import os, time, random, lorem
 
-    def auto_product_update(request):
 
-        for product in Product.objects.all():
+    def generate_products(request, times):
+        for i in range(0, int(times)):
+            p = Product(
+                title=lorem.sentence(),
+                resume=lorem.paragraph(),
+                description=lorem.text(),
+                price=round(100 * random.random(), 2)
+            )
+            p.save()
+        return HttpResponse(f'{times} Products created !')
 
+    def update_products(request):
+
+        for p in Product.objects.all():
+      
             # Sets img 
-            folder = f"{settings.BASE_DIR}/load-data/img"
-            filenames = [files for _, _, files in os.walk(folder)][0]
+            img_folder = f"{settings.BASE_DIR}/load-data/img"
+            filenames = [files for _, _, files in os.walk(img_folder)][0]
             filename = filenames[random.randint(0, len(filenames)-1)]
-            if not product.img:
-                product.img.save(f'{filename}', File(open(f'{folder}/{filename}', 'rb')))
+            if not p.img:
+                p.img.save(f'{filename}', File(open(f'{img_folder}/{filename}', 'rb')))
 
             # Save for slug
-            product.save()
+            p.save()
+
         return HttpResponse('Products updated !')

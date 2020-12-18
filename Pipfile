@@ -10,6 +10,7 @@ Django = "==2.2.10"
 pillow = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
+lorem = "*"
 
 [requires]
 python_version = "3.6"
