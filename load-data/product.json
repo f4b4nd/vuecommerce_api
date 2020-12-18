@@ -108,5 +108,15 @@
             "resume": "Superatis Tauri montis verticibus qui ad solis ortum sublimius attolluntur Cilicia spatiis porrigitur late distentis dives bonis omnibus terra, eiusque lateri dextro adnexa Isauria, pari sorte uberi palmite viget et frugibus minutis, quam mediam navigabile flumen Calycadnus interscindit.",
             "price": 113.6
         }
-    }
+    },
+    {     
+        "pk": 12,
+        "model": "core.Product",
+        "fields": {
+            "title": "voluptas montis verticibus autem" ,
+            "description": "Nisi mihi Phaedrum, inquam, tu mentitum aut Zenonem putas, quorum utrumque audivi, cum mihi nihil sane praeter sedulitatem probarent, omnes mihi Epicuri sententiae satis notae sunt. atque eos, quos nominavi, cum Attico nostro frequenter audivi, cum miraretur ille quidem utrumque, Phaedrum autem etiam amaret, cotidieque inter nos ea, quae audiebamus, conferebamus, neque erat umquam controversia, quid ego intellegerem, sed quid probarem.",
+            "resume": "Superatis Tauri montis verticibus qui ad solis ortum sublimius attolluntur Cilicia spatiis porrigitur late distentis dives bonis omnibus terra, eiusque lateri dextro adnexa Isauria, pari sorte uberi palmite viget et frugibus minutis, quam mediam navigabile flumen Calycadnus interscindit.",
+            "price": 123.6
+        }
+    }    
 ]

@@ -24,4 +24,4 @@ urlpatterns += [path('api/',  include(router.urls))]
 # DEBUG
 
 if settings.DEBUG:
-    urlpatterns += [path('save_slugs', views.save_slugs, name='save_slugs')]
+    urlpatterns += [path('product_update', views.auto_product_update, name='save_slugs')]

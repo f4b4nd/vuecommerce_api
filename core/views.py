@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.core import serializers
@@ -28,8 +29,23 @@ def InformationView(request, slug):
     return JsonResponse(serialized_obj[1:-1], safe=False)
 
 
-def save_slugs(request):
-    # to generate slug automatically, only in DEBUG mode
-    for product in Product.objects.all():
-        product.save()
-    return HttpResponse('Slug updated')
+
+if settings.DEBUG: 
+
+    from django.core.files import File
+    import os, random
+
+    def auto_product_update(request):
+
+        for product in Product.objects.all():
+
+            # Sets img 
+            folder = f"{settings.BASE_DIR}/load-data/img"
+            filenames = [files for _, _, files in os.walk(folder)][0]
+            filename = filenames[random.randint(0, len(filenames)-1)]
+            if not product.img:
+                product.img.save(f'{filename}', File(open(f'{folder}/{filename}', 'rb')))
+
+            # Save for slug
+            product.save()
+        return HttpResponse('Products updated !')
