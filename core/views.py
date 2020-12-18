@@ -28,7 +28,7 @@ def InformationView(request, slug):
 
 
 def save_slugs(request):
-    # to generate slug automatically
+    # to generate slug automatically, only in DEBUG mode
     for product in Product.objects.all():
         product.save()
     return HttpResponse('Slug updated')

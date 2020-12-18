@@ -4,12 +4,14 @@ from rest_framework import routers
 
 from core import views
 
+
 # HARDCODED VIEWS
 
 urlpatterns = [
     path('api/informations/<slug>', views.InformationView, name='Information'),
     path('api/product/<slug>', views.ProductView, name='ProductView'),
 ]
+
 
 # REST-FRAMEWORK
 
