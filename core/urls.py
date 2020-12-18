@@ -1,13 +1,25 @@
 from django.urls import path, include
+from django.conf import settings
 from rest_framework import routers
 
-from .views import ProductViewSet, InformationView
+from core import views
 
-router = routers.DefaultRouter()
-router.register(r'products', ProductViewSet, basename='products')
-
+# HARDCODED VIEWS
 
 urlpatterns = [
-    path('api/',  include(router.urls)),
-    path('api/informations/<slug>', InformationView, name='Information')
+    path('api/informations/<slug>', views.InformationView, name='Information'),
+    path('api/product/<slug>', views.ProductView, name='ProductView'),
 ]
+
+# REST-FRAMEWORK
+
+router = routers.DefaultRouter()
+router.register(r'products', views.ProductViewSet, basename='products')
+
+urlpatterns += [path('api/',  include(router.urls))]
+
+
+# DEBUG
+
+if settings.DEBUG:
+    urlpatterns += [path('save_slugs', views.save_slugs, name='save_slugs')]

@@ -13,8 +13,22 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 
 @require_http_methods(["GET"])
+def ProductView(request, slug):
+    obj = get_object_or_404(Product, slug=slug)
+    serialized_obj = serializers.serialize('json', [ obj, ], ensure_ascii=False)
+    status = 200
+    return JsonResponse(serialized_obj[1:-1], safe=False)   
+
+@require_http_methods(["GET"])
 def InformationView(request, slug):
     obj = get_object_or_404(Information, slug=slug)
     serialized_obj = serializers.serialize('json', [ obj, ], ensure_ascii=False)
     status = 200
     return JsonResponse(serialized_obj[1:-1], safe=False)
+
+
+def save_slugs(request):
+    # to generate slug automatically
+    for product in Product.objects.all():
+        product.save()
+    return HttpResponse('Slug updated')
