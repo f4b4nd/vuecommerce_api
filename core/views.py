@@ -14,13 +14,10 @@ class ProductViewSet(viewsets.ModelViewSet):
 
 @require_http_methods(["GET"])
 def ProductView(request, slug):
-    # TODO: use full url for image 
     obj = get_object_or_404(Product, slug=slug)
-    serialized_obj = serializers.serialize('json', [ obj, ], ensure_ascii=False)
-    status = 200
-    return JsonResponse(
-        serialized_obj[1:-1], 
-        safe=False)
+    serialized_obj = ProductSerializer(obj)
+    # status = 200
+    return JsonResponse(serialized_obj.data)
     
 
 @require_http_methods(["GET"])
