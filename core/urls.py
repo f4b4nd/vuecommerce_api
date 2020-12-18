@@ -8,8 +8,8 @@ from core import views
 # HARDCODED VIEWS
 
 urlpatterns = [
-    path('api/informations/<slug>', views.InformationView, name='Information'),
-    path('api/product/<slug>', views.ProductView, name='ProductView'),
+    path('api/informations/<slug:slug>', views.InformationView, name='Information'),
+    path('api/product/<slug:slug>', views.ProductView, name='ProductView'),
 ]
 
 
@@ -25,6 +25,6 @@ urlpatterns += [path('api/',  include(router.urls))]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('generate_products/<times>', views.generate_products, name='generate_products'),
+        path('generate_products/<int:times>', views.generate_products, name='generate_products'),
         path('update_products', views.update_products, name='update_products')
     ]
