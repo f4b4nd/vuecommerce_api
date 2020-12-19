@@ -17,21 +17,6 @@ from corsheaders.defaults import default_headers
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-SECRET_KEY = os.environ.get('DEBUG', "")
-
-ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', '').split(',')
-
-DEBUG = os.environ.get('DEBUG', False) == 'TRUE'
-TEMPLATE_DEBUG = os.environ.get('TEMPLATE_DEBUG', False) == 'TRUE'
-DEBUG_PROPAGATE_EXCEPTIONS = os.environ.get('DEBUG_PROPAGATE_EXCEPTIONS', False) == 'TRUE'
-
-CORS_ALLOW_CREDENTIALS = os.environ.get('CORS_ALLOW_CREDENTIALS', False) == 'TRUE'
-CORS_ORIGIN_WHITELIST =  os.environ.get('CORS_ORIGIN_WHITELIST', '').split(',')
-CORS_ORIGIN_ALLOW_ALL = os.environ.get('CORS_ORIGIN_ALLOW_ALL', False) == 'TRUE'
-CORS_ALLOW_HEADERS = default_headers + (
-    'Access-Control-Allow-Origin',
-)
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -89,11 +74,11 @@ DATABASES = {
 
     'default': {
         'ENGINE': "django.db.backends.postgresql_psycopg2",
-        'NAME': os.environ.get('POSTGRES_NAME', ''),
-        'USER': os.environ.get('POSTGRES_USER', ''),        
-        'PASSWORD': os.environ.get('POSTGRES_PASSWORD', ''),
-        'HOST': os.environ.get('POSTGRES_HOST', ''),
-        'PORT': os.environ.get('POSTGRES_PORT', '5432'),
+        'NAME': os.getenv('POSTGRES_NAME', ''),
+        'USER': os.getenv('POSTGRES_USER', ''),        
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('POSTGRES_HOST', ''),
+        'PORT': os.getenv('POSTGRES_PORT', '5432'),
     },
 
     'sqlite': {
@@ -122,6 +107,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# KEY
+SECRET_KEY = os.getenv('DEBUG', "")
 
 # Internationalization
 LANGUAGE_CODE = 'fr-FR'
@@ -130,8 +117,23 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# DEBUG 
+DEBUG = os.getenv('DEBUG', False) == 'TRUE'
+TEMPLATE_DEBUG = os.getenv('TEMPLATE_DEBUG', False) == 'TRUE'
+DEBUG_PROPAGATE_EXCEPTIONS = os.getenv('DEBUG_PROPAGATE_EXCEPTIONS', False) == 'TRUE'
 
-# Static files (CSS, JavaScript, Images)
+# HOSTS
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
+
+# CROSS ORIGINS WITH REST-FRAMEWORK
+CORS_ALLOW_CREDENTIALS = os.getenv('CORS_ALLOW_CREDENTIALS', False) == 'TRUE'
+CORS_ORIGIN_WHITELIST =  os.getenv('CORS_ORIGIN_WHITELIST', '').split(',')
+CORS_ORIGIN_ALLOW_ALL = os.getenv('CORS_ORIGIN_ALLOW_ALL', False) == 'TRUE'
+CORS_ALLOW_HEADERS = default_headers + (
+    'Access-Control-Allow-Origin',
+)
+
+# Static files
 STATIC_URL = '/static/'
 
 # MEDIA with S3 Configuration
