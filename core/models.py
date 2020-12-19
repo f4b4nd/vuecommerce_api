@@ -1,5 +1,6 @@
 from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
+from django.contrib.auth.models import AbstractUser
 
 
 class Product(models.Model):
@@ -27,6 +28,16 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.title}"
 
+
+class User(AbstractUser):
+    gender = models.CharField(max_length=1, null=True, blank=True,
+                              default='M',
+                              choices=[('1', 'M.'), ('2', 'Mme'), ('3', 'Autre')])
+    birthdate = models.DateField(null=True)
+
+    class Meta:
+        swappable = 'AUTH_USER_MODEL'
+        db_table = 'auth_user'
 
 class Information(models.Model):
     title = models.CharField(max_length=100, blank=True, null=True)

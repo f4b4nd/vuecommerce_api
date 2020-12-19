@@ -24,7 +24,11 @@ urlpatterns += [path('api/',  include(router.urls))]
 # DEBUG
 
 if settings.DEBUG:
+
+    from core import debug
+
     urlpatterns += [
-        path('generate_products/<int:times>', views.generate_products, name='generate_products'),
-        path('update_products', views.update_products, name='update_products')
+        path('generate_products/<int:times>', debug.generate_products, name='generate_products'),
+        path('update_products', debug.update_products, name='update_products'),
+        path('update_informations', debug.update_informations, name='update_informations'),
     ]

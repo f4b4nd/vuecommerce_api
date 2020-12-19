@@ -1,10 +1,13 @@
 from django.contrib import admin
-from .models import Product, Information
+from django.contrib.auth.admin import UserAdmin
 
+from core.models import Product, Information, User
+
+@admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     exclude = ('slug',)
-    # prepopulated_fields = {"slug": ("title",)}
 
 
-admin.site.register(Product, ProductAdmin)
+# admin.site.register(Product, ProductAdmin)
 admin.site.register(Information)
+admin.site.register(User)
