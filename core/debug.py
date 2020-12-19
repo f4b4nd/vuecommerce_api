@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.core.files import File
 import os, random, lorem
-from .models import Product, Information
+from core.models import Product, Information
 
 
 def generate_products(request, times):

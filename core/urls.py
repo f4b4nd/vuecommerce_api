@@ -22,7 +22,6 @@ urlpatterns += [path('api/',  include(router.urls))]
 
 
 # DEBUG
-
 if settings.DEBUG:
 
     from core import debug
