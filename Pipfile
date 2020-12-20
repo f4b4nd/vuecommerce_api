@@ -11,6 +11,7 @@ pillow = "*"
 djangorestframework = "*"
 django-cors-headers = "*"
 lorem = "*"
+django-rest-knox = "*"
 
 [requires]
 python_version = "3.6"
