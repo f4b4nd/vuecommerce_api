@@ -23,5 +23,18 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('', include('accounts.urls')),
-
 ]
+
+
+from django.conf import settings
+
+# DEBUG
+if settings.DEBUG:
+
+    from ecommerce import debug
+
+    urlpatterns += [
+        path('generate_products/<int:times>', debug.generate_products, name='generate_products'),
+        path('update_products', debug.update_products, name='update_products'),
+        path('update_informations', debug.update_informations, name='update_informations'),
+    ]
