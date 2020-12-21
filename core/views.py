@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from django.db import IntegrityError
 
-from .models import Product, Information, User
+from .models import Product, Information #, User
 from .serializers import ProductSerializer
 import random, string
 
@@ -27,7 +27,7 @@ def ProductView(request, slug):
     # status = 200
     return JsonResponse(serialized_obj.data)
     
-
+"""
 @csrf_exempt
 @require_http_methods(["POST"])
 def RegisterUser(request):
@@ -48,7 +48,7 @@ def RegisterUser(request):
         res=  {'error': 'fail'}
     print(res)
     return JsonResponse(res)
-
+"""
 
 @require_http_methods(["GET"])
 def InformationView(request, slug):

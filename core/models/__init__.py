@@ -2,7 +2,7 @@ from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
 
 from .product import *
-from .user import *
+# from .user import *
 
 
 class Information(models.Model):

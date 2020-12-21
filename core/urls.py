@@ -9,7 +9,7 @@ from core import views
 urlpatterns = [
     path('api/informations/<slug:slug>', views.InformationView, name='Information'),
 
-    path('api/register-user/', views.RegisterUser, name='RegisterUser'),
+    # path('api/register-user/', views.RegisterUser, name='RegisterUser'),
     
 ]
 

@@ -40,7 +40,8 @@ class UserManager(BaseUserManager):
 class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
-    email = models.EmailField(_('email address'), unique=True, blank=False, null=False) # changes email to unique and blank to false
+    # changes email to unique and blank to false
+    email = models.EmailField(_('email address'), unique=True, blank=False, null=False) 
     REQUIRED_FIELDS = [] # removes email from REQUIRED_FIELDS
 
 
@@ -49,7 +50,7 @@ class User(AbstractUser):
                               choices=[('1', 'M.'), ('2', 'Mme'), ('3', 'Autre')])
     birthdate = models.DateField(null=True)
 
-    objects = UserManager()
+    # objects = UserManager()
 
     class Meta:
         swappable = 'AUTH_USER_MODEL'
