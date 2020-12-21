@@ -1,6 +1,7 @@
 from rest_framework import serializers
-from accounts.models import User
 from django.contrib.auth import authenticate
+
+from accounts.models import User
 
 
 # User Serializer
@@ -28,7 +29,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 # Login Serializer
 class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.EmailField()
     password = serializers.CharField()
 
     def validate(self, data):
