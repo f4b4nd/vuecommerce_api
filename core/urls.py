@@ -7,9 +7,8 @@ from core import views
 # HARDCODED VIEWS
 
 urlpatterns = [
+    
     path('api/informations/<slug:slug>', views.InformationView, name='Information'),
-
-    # path('api/register-user/', views.RegisterUser, name='RegisterUser'),
     
 ]
 

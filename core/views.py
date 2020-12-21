@@ -27,28 +27,6 @@ def ProductView(request, slug):
     # status = 200
     return JsonResponse(serialized_obj.data)
     
-"""
-@csrf_exempt
-@require_http_methods(["POST"])
-def RegisterUser(request):
-    f = request.POST
-    # f = f.cleaned_data
-    print(f.get('firstname', ''))
-    print(f)
-    user = User (
-        first_name=f.get('firstname', ''),
-        last_name=f.get('lastname', ''),
-        username=gen_random_user(),
-        email=f.get('email', ''),
-    )
-    try:
-        user.save()
-        res = f
-    except IntegrityError:
-        res=  {'error': 'fail'}
-    print(res)
-    return JsonResponse(res)
-"""
 
 @require_http_methods(["GET"])
 def InformationView(request, slug):

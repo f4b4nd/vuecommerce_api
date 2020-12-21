@@ -8,14 +8,7 @@ import uuid
 from .models import User
 
 
-def gen_random_username():
-    return uuid.uuid4().hex[:30]
-
-
 @receiver(signals.pre_save, sender=User)
-def pre_save_for_conference_code_fixture(sender, instance, **kwargs):
-    """
-    Automatically add created_at when loaddata
-    """
+def set_random_username(sender, instance, **kwargs):    
     if not instance.username:
-        instance.username = gen_random_username()
+        instance.username = uuid.uuid4().hex[:30]
