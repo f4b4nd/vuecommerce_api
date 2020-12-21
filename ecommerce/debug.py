@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.core.files import File
 import os, random, lorem
-from core.models import Product, Information
+from core.models import Product, TemplateHTML
 
 
 def generate_products(request, times):
@@ -33,9 +33,9 @@ def update_products(request):
 
     return HttpResponse('Products updated !')
 
-def update_informations(request):
+def update_templatesHTML(request):
     # for slug 
-    for inf in Information.objects.all():        
+    for inf in TemplateHTML.objects.all():        
         inf.save()
 
-    return HttpResponse('Informations updated !')
+    return HttpResponse('TemplateHTML updated !')

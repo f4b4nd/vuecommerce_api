@@ -35,6 +35,6 @@ if settings.DEBUG:
 
     urlpatterns += [
         path('generate_products/<int:times>', debug.generate_products, name='generate_products'),
-        path('update_products', debug.update_products, name='update_products'),
-        path('update_informations', debug.update_informations, name='update_informations'),
+        path('update_products', debug.update_products, name='update-products'),
+        path('update_templates', debug.update_templatesHTML, name='update-templates'),
     ]
