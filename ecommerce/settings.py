@@ -25,7 +25,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'rest_framework.authtoken',
-    # 'knox',
 
 ]
 
@@ -146,17 +145,13 @@ AWS_S3_ADDRESSING_STYLE = "virtual"
 # USER MODEL
 AUTH_USER_MODEL = 'accounts.User'
 
-# REST AUTHENTIFICATION WITH TOKEN (ALL API views)
+# REST AUTHENTIFICATION : defines WHICH METHODS are used by default 
+# to authenticate with which level of permission (ex: authenticated, admin, etc.)
 REST_FRAMERWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES' : [
         'rest_framework.authentication.TokenAuthentication', 
-
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
-
     ],
     'DEFAULT_PERMISSION_CLASSES' : [
-        'rest_framework.permissions.IsAuthenticated'
+        'rest_framework.permissions.IsAuthenticated',
     ]
-    # ('knox.auth.TokenAuthentication',)
 }
