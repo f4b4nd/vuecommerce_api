@@ -31,10 +31,10 @@ from django.conf import settings
 # DEBUG
 if settings.DEBUG:
 
-    from ecommerce import debug
+    from . import debug
 
     urlpatterns += [
-        path('generate_products/<int:times>', debug.generate_products, name='generate_products'),
-        path('update_products', debug.update_products, name='update-products'),
-        path('update_templates', debug.update_templatesHTML, name='update-templates'),
+        path('generate-products/<int:times>', debug.generate_products, name='generate-products'),
+        path('update-products', debug.update_products, name='update-products'),
+        path('update-templates', debug.update_templatesHTML, name='update-templates'),
     ]
