@@ -8,9 +8,9 @@ from .models import Product
 
 
 @receiver(signals.pre_save, sender=Product)
-def on_image_delete(sender, instance, **kwargs):
+def on_product_img_delete(sender, instance, **kwargs):
     # Removes img file from media when Product.img field is removed
-    
+
     if settings.DEFAULT_FILE_STORAGE != 'django.core.files.storage.FileSystemStorage':
         return False
 
