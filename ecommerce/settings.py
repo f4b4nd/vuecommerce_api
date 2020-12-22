@@ -73,7 +73,7 @@ DATABASES = {
     'default': {
         'ENGINE': "django.db.backends.postgresql_psycopg2",
         'NAME': os.getenv('POSTGRES_NAME', ''),
-        'USER': os.getenv('POSTGRES_USER', ''),        
+        'USER': os.getenv('POSTGRES_USER', ''),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
         'HOST': os.getenv('POSTGRES_HOST', ''),
         'PORT': os.getenv('POSTGRES_PORT', ''),
@@ -152,13 +152,17 @@ AWS_S3_ADDRESSING_STYLE = "virtual"
 # USER MODEL
 AUTH_USER_MODEL = 'accounts.User'
 
-# REST AUTHENTIFICATION : defines WHICH METHODS are used by default 
-# to authenticate with which level of permission (ex: authenticated, admin, etc.)
+# REST AUTHENTIFICATION
 REST_FRAMERWORK = {
+
     'DEFAULT_AUTHENTICATION_CLASSES' : [
+        # which auth method (ex: token, session, etc.) is used when specific permission is required 
         'rest_framework.authentication.TokenAuthentication', 
     ],
+
     'DEFAULT_PERMISSION_CLASSES' : [
+        # which level of permission (ex: authenticated, admin, etc.)
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    
 }
