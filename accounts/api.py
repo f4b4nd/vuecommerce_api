@@ -58,7 +58,7 @@ class LogoutAPI(APIView):
 
 
 
-class UserAPI(APIView):
+class ExampleUserAPI(APIView):
     
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)

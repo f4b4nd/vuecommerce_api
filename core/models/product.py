@@ -16,10 +16,10 @@ class Product(models.Model):
         try:
             with transaction.atomic():
                 self.slug = slugify(self.title)
-                super(Product, self).save(*args, **kwargs)
+                super().save(*args, **kwargs)
         except IntegrityError:
             self.slug = f"{slugify(self.title)}-{self.id}"
-            super(Product, self).save(*args, **kwargs)
+            super().save(*args, **kwargs)
 
     class Meta:
         ordering = ['-created_at']
