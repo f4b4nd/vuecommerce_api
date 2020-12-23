@@ -15,7 +15,7 @@ Including another URLconf
 """
 
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import routers
 from django.conf.urls.static import static
 from django.conf import settings
@@ -50,6 +50,6 @@ if settings.DEBUG:
         
         # updater
         path('update-orders', debug.update_orders, name='update-orders'),
-        path('update-products-img', debug.update_products_img, name='update-products-img'),
+        re_path('update-products/(?P<add_img>\w+|)', debug.update_products, name='update-products'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
     ]

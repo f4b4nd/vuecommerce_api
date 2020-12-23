@@ -162,19 +162,21 @@ def update_orders(request):
     return HttpResponse('Order updated !')
 
 
-
-def update_products_img(request):
+def update_products(request, add_img=None):
 
     for p in Product.objects.all():
         
-        # Sets img 
-        img_folder = f"{settings.BASE_DIR}/load-data/img"
-        filenames = [files for _, _, files in os.walk(img_folder)][0]
-        filename = filenames[random.randint(0, len(filenames)-1)]
-        if not p.img:
-            p.img.save(f'{filename}', File(open(f'{img_folder}/{filename}', 'rb')))
+        if not p.category:
+            p.category = get_random_instance(ProductCategory)
 
-        # Save for slug
+        if add_img == 'true':
+            # Sets img 
+            img_folder = f"{settings.BASE_DIR}/load-data/img"
+            filenames = [files for _, _, files in os.walk(img_folder)][0]
+            filename = filenames[random.randint(0, len(filenames)-1)]
+            if not p.img:
+                p.img.save(f'{filename}', File(open(f'{img_folder}/{filename}', 'rb')))
+
         p.save()
 
     return HttpResponse('Products updated !')
