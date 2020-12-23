@@ -10,7 +10,8 @@ class Product(models.Model):
     price = models.FloatField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
     category = models.ForeignKey('ProductCategory',
-                                 on_delete=models.SET_NULL, null=True)
+                                 on_delete=models.SET_NULL, 
+                                 blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
 
@@ -32,7 +33,7 @@ class Product(models.Model):
 
 class ProductCategory(models.Model):
 
-    name = models.CharField(unique=True, max_length=30)
+    name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
@@ -49,9 +50,10 @@ class ProductCategory(models.Model):
 class ProductSubCategory(models.Model):
 
     parent = models.ForeignKey('ProductCategory',
-                             on_delete=models.CASCADE,
-                             related_name='subcategories')
-    name = models.CharField(unique=True, max_length=30)
+                                related_name='subcategories', 
+                               on_delete=models.SET_NULL,
+                               blank=True, null=True)
+    name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
