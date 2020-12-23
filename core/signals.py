@@ -2,9 +2,9 @@ from django.dispatch import receiver
 from django.db.models import signals
 from django.conf import settings
 from rest_framework.authtoken.models import Token
-import os
+import os, uuid
 
-from .models import Product
+from .models import Product, Order
 
 
 @receiver(signals.pre_save, sender=Product)
@@ -27,4 +27,12 @@ def on_product_img_delete(sender, instance, **kwargs):
     if  old_img_file != new_img_file:
         if os.path.isfile(old_img_file.path):
             os.remove(old_img_file.path)
+    
+
+@receiver(signals.pre_save, sender=Order)
+def on_product_img_delete(sender, instance, **kwargs):
+    # sets ref_code
+
+    if not instance.ref_code:
+        instance.ref_code = uuid.uuid4().hex[:30]
     

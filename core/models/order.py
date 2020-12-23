@@ -9,12 +9,12 @@ class Order(models.Model):
     # set with signals.pre_save
     ref_code = models.CharField(max_length=30, blank=True, null=True)
 
-    bill_address = models.OneToOneField('Address',
+    bill_address = models.ForeignKey('Address',
                                         related_name='bill_address',
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
 
-    ship_address = models.OneToOneField('Address',
+    ship_address = models.ForeignKey('Address',
                                         related_name='ship_address',
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
@@ -131,9 +131,9 @@ class Address(models.Model):
 
     def __str__(self):
         try:
-            return f"{self.get_user.email} - {self.address}"
+            return f"#{self.pk}{self.address_type} - {self.get_user.email} - {self.address}"
         except AttributeError:
-            return f"{self.pk} - {self.address}"
+            return f"#{self.pk}{self.address_type} - {self.address}"
 
     @property
     def get_user(self):
