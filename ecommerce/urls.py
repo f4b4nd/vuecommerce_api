@@ -41,4 +41,6 @@ if settings.DEBUG:
         path('generate-products/<int:times>', debug.generate_products, name='generate-products'),
         path('update-products', debug.update_products, name='update-products'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
+        path('generate-orders/<int:times>', debug.generate_orders, name='generate-orders'),
+        path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
     ]

@@ -37,7 +37,7 @@ class ProductCategory(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Product__Category'
+        verbose_name_plural = 'Product__Categories'
 
     def __str__(self):
         return self.name
@@ -57,7 +57,7 @@ class ProductSubCategory(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Product__SubCategory'
+        verbose_name_plural = 'Product__SubCategories'
 
     def __str__(self):
         return self.name

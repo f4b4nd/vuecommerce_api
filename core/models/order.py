@@ -71,10 +71,8 @@ class OrderProduct(models.Model):
 
     # track with signals.pre_save in case of price product changes
     price = models.FloatField(blank=True, null=True)    
-
-
     class Meta:
-        verbose_name = 'Order__OrderProducts'
+        verbose_name_plural = 'Order__OrderProducts'
 
     def __str__(self):
         return f"{self.quantity} of {self.product.title}"
@@ -132,21 +130,26 @@ class Address(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.get_user.email} - {self.address}"
+        try:
+            return f"{self.get_user.email} - {self.address}"
+        except AttributeError:
+            return f"{self.pk} - {self.address}"
 
     @property
     def get_user(self):
         if self.address_type == 'S':
             order = Order.objects.filter(ship_address__pk=self.pk).first()
-            return order.user
+            if order:
+                return order.user
 
         elif self.address_type == 'B':
             order = Order.objects.filter(bill_address__pk=self.pk).first()            
-            return order.user
+            if order:
+                return order.user
 
     
     class Meta:
-        verbose_name_plural = 'Order__Address'
+        verbose_name_plural = 'Order__Addresses'
         unique_together = (
             ('address_type', 'last_name', 'first_name', 'address', 'country', 'zipcode', 'city'),
         )
