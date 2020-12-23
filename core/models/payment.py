@@ -24,7 +24,7 @@ class Payment(models.Model):
     def __str__(self):
         return f"{self.get_user.email} - {self.charge_id}"
 
-    @propery
+    @property
     def get_user(self):
         order = Order.objects.filter(payment__pk=self.pk)
         return order.user
@@ -44,6 +44,6 @@ class Refund(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.get_user}"
     
-    @get_user
+    @property
     def get_user(self):
         return self.order.user

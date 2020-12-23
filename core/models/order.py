@@ -1,6 +1,6 @@
 from django.db import models, IntegrityError, transaction
 from django.conf import settings
-from .coupon import Coupon
+from .coupon import ProductCoupon
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -10,10 +10,12 @@ class Order(models.Model):
     ref_code = models.CharField(max_length=30, blank=True, null=True)
 
     bill_address = models.OneToOneField('Address',
+                                        related_name='bill_address',
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
 
     ship_address = models.OneToOneField('Address',
+                                        related_name='ship_address',
                                         on_delete=models.SET_NULL,
                                         blank=True, null=True)
 
@@ -83,7 +85,7 @@ class OrderProduct(models.Model):
 
     def get_unit_price_discounted(self):
         # Unit discount price
-        coupon = Coupon.objects.filter(orderproducts__pk=self.pk).first()
+        coupon = ProductCoupon.objects.filter(orderproducts__pk=self.pk).first()
         if coupon:
             if coupon.amount and not coupon.percent and self.price > coupon.amount: 
                 return self.price - coupon.amount
@@ -132,7 +134,7 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.get_user.email} - {self.address}"
 
-    @propery
+    @property
     def get_user(self):
         if self.address_type == 'S':
             order = Order.objects.filter(ship_address__pk=self.pk).first()
@@ -146,7 +148,7 @@ class Address(models.Model):
     class Meta:
         verbose_name_plural = 'Order__Address'
         unique_together = (
-            ('address_type', 'user', 'address', 'country', 'zipcode', 'city'),
+            ('address_type', 'last_name', 'first_name', 'address', 'country', 'zipcode', 'city'),
         )
 
 
