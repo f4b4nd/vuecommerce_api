@@ -15,9 +15,9 @@ class Order(models.Model):
                                         blank=True, null=True)
 
     ship_address = models.ForeignKey('Address',
-                                        related_name='ship_address',
-                                        on_delete=models.SET_NULL,
-                                        blank=True, null=True)
+                                      related_name='ship_address',
+                                      on_delete=models.SET_NULL,
+                                      blank=True, null=True)
 
     payment = models.OneToOneField('Payment',
                                     on_delete=models.SET_NULL,

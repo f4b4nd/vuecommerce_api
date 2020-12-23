@@ -23,9 +23,17 @@ def get_random_instance(model, *args, **kwargs):
     if model == Address:
         choice = kwargs.get('choice', None)
         objs = model.objects.filter(address_type=choice)
+
+    elif model == Payment:
+        # OnetoOne relation between Order and Payment
+        orders =  Order.objects.filter(payment__isnull=False)
+        pks = [o.payment.pk for o in orders]
+        objs = Payment.objects.exclude(pk__in=pks)
+
     else:
         objs = model.objects.all()
     
+
     if objs.count() == 0:
         return
     index = random.randint(0, objs.count()-1)
@@ -122,11 +130,13 @@ def update_orders(request):
 
         if not p.payment:
             # NOTE: problem OneToOne
-            p.payment = get_random_instance(Payment)
+            p.payment = get_random_instance(Payment, relation='1to1')
 
         p.save()
 
     return HttpResponse('Order updated !')
+
+
 
 def update_products_img(request):
 
@@ -151,15 +161,3 @@ def update_templatesHTML(request):
 
     return HttpResponse('TemplateHTML updated !')
 
-
-
-#
-
-
-#
-def add_orderproducts_to_orders(request, times):
-    pass
-
-#
-def generate_comments(request):
-    pass    

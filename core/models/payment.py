@@ -23,9 +23,9 @@ class Payment(models.Model):
 
     def __str__(self):
         try:
-            return f"{self.get_user.email} - {self.charge_id}"
+            return f"#{self.pk}{self.method} - {self.get_user.email} - {self.charge_id}"
         except AttributeError:
-            return f"{self.pk} - {self.charge_id}"
+            return f"#{self.pk}{self.method} - {self.charge_id}"
 
     @property
     def get_user(self):
