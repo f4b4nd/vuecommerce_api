@@ -1,6 +1,6 @@
 from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
-
+from django.conf import settings
 
 class Product(models.Model):
 
@@ -9,6 +9,8 @@ class Product(models.Model):
     resume = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
+    category = models.ForeignKey('ProductCategory',
+                                 on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
 
@@ -26,3 +28,38 @@ class Product(models.Model):
 
     def __str__(self):
         return f"{self.pk} - {self.title}"
+
+
+class ProductCategory(models.Model):
+
+    name = models.CharField(unique=True, max_length=30)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Product__Category'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+
+class ProductSubCategory(models.Model):
+
+    parent = models.ForeignKey('ProductCategory',
+                             on_delete=models.CASCADE,
+                             related_name='subcategories')
+    name = models.CharField(unique=True, max_length=30)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name_plural = 'Product__SubCategory'
+
+    def __str__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
