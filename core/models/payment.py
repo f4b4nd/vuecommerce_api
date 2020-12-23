@@ -22,11 +22,14 @@ class Payment(models.Model):
         verbose_name = 'Order__Payment'
 
     def __str__(self):
-        return f"{self.get_user.email} - {self.charge_id}"
+        try:
+            return f"{self.get_user.email} - {self.charge_id}"
+        except AttributeError:
+            return f"{self.pk} - {self.charge_id}"
 
     @property
     def get_user(self):
-        order = Order.objects.filter(payment__pk=self.pk)
+        order = Order.objects.filter(payment__pk=self.pk).first()
         return order.user
 
 

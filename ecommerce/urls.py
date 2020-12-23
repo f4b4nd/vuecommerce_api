@@ -39,8 +39,11 @@ if settings.DEBUG:
 
     urlpatterns += [
         path('generate-products/<int:times>', debug.generate_products, name='generate-products'),
+        path('update-orders', debug.update_orders, name='update-orders'),
         path('update-products-img', debug.update_products_img, name='update-products-img'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
         path('generate-orders/<int:times>', debug.generate_orders, name='generate-orders'),
         path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
+        path('generate-payments/<int:times>', debug.generate_payments, name='generate-payments'),
+        path('generate-comments/<int:times>', debug.generate_comments, name='generate-comments'),
     ]

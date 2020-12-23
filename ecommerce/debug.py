@@ -9,6 +9,7 @@ from core.models import (
     Order,
     Address,
     Payment,
+    Comment,
     )
 
 from accounts.models import User
@@ -84,8 +85,49 @@ def generate_addresses(request, times):
     return HttpResponse(f'{times} Addresses generated !')
 
 
+def generate_payments(request, times):
+    for i in range(0, times):
+        p = Payment()
+        idx = random.randint(0, 1)
+        p.method = ['S', 'P'][idx]
+        p.charge_id = random_text('n', 15)
+        p.amount = random.randint(1000, 9999) / 100
+        p.save()
+    return HttpResponse(f'{times} Payments generated !')
+
+
+def generate_comments(request, times):
+    for i in range(0, times):
+        c = Comment()
+        c.post = get_random_instance(Product)
+        c.user = get_random_instance(User)
+        c.body = random_text('t', 200)
+        c.rating = random.randint(1, 5)
+        c.active = [True, False][random.randint(0, 1)]
+        c.save()
+    return HttpResponse(f'{times} Comments generated !')
+
 
 # UPDATE
+
+def update_orders(request):
+
+    for p in Order.objects.all():
+        
+        if not p.bill_address:
+            p.bill_address = get_random_instance(Address, choice='B')
+
+        if not p.ship_address:
+            p.ship_address = get_random_instance(Address, choice='S')
+
+        if not p.payment:
+            # NOTE: problem OneToOne
+            p.payment = get_random_instance(Payment)
+
+        p.save()
+
+    return HttpResponse('Order updated !')
+
 def update_products_img(request):
 
     for p in Product.objects.all():

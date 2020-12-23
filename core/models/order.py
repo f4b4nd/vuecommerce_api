@@ -139,13 +139,11 @@ class Address(models.Model):
     def get_user(self):
         if self.address_type == 'S':
             order = Order.objects.filter(ship_address__pk=self.pk).first()
-            if order:
-                return order.user
+            return order.user
 
         elif self.address_type == 'B':
             order = Order.objects.filter(bill_address__pk=self.pk).first()            
-            if order:
-                return order.user
+            return order.user
 
     
     class Meta:
