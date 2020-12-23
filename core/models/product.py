@@ -40,7 +40,7 @@ class ProductCategory(models.Model):
         verbose_name_plural = 'Product__Categories'
 
     def __str__(self):
-        return self.name
+        return f"#{self.pk} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
@@ -60,7 +60,7 @@ class ProductSubCategory(models.Model):
         verbose_name_plural = 'Product__SubCategories'
 
     def __str__(self):
-        return self.name
+        return f"#{self.pk} - {self.name} - (parent: {self.parent})"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

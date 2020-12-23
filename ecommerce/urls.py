@@ -45,6 +45,8 @@ if settings.DEBUG:
         path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
         path('generate-payments/<int:times>', debug.generate_payments, name='generate-payments'),
         path('generate-comments/<int:times>', debug.generate_comments, name='generate-comments'),       
+        path('generate-categories/<int:times>', debug.generate_categories, name='generate-categories'),       
+        path('generate-subcategories/<int:times>', debug.generate_subcategories, name='generate-subcategories'),       
         
         # updater
         path('update-orders', debug.update_orders, name='update-orders'),

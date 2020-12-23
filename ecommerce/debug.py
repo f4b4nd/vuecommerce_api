@@ -10,10 +10,12 @@ from core.models import (
     Address,
     Payment,
     Comment,
+    ProductCategory,
+    ProductSubCategory,
     )
 
 from accounts.models import User
-import random
+import random, string
 
 
 ## TOOLS ##
@@ -47,9 +49,17 @@ def random_text(text, max_length=None):
     if text == "t":
         res = lorem.text()
         res = re.sub("\.", "", res)
+
+    if text == "uniq":
+        # some text begins the same
+        letters = string.ascii_lowercase
+        res = ''.join(random.choice(letters) for i in range(max_length))
+        res = re.sub("\.", "", res)        
+
     elif text == 'n' and max_length:
         res = str([random.randint(1, 9) for i in range(0, max_length)])
         res = re.sub("\[|\]|\,|\s", "", res)
+
     if max_length:
         return res[:max_length]
     return res
@@ -115,6 +125,21 @@ def generate_comments(request, times):
         c.save()
     return HttpResponse(f'{times} Comments generated !')
 
+
+def generate_categories(request, times):
+    for i in range(0, times):
+        c = ProductCategory()
+        c.name = random_text('uniq', 10)
+        c.save()
+    return HttpResponse(f'{times} Categories generated !')
+
+def generate_subcategories(request, times):
+    for i in range(0, times):
+        c = ProductSubCategory()
+        c.parent = get_random_instance(ProductCategory)
+        c.name = random_text('uniq', 10)
+        c.save()
+    return HttpResponse(f'{times} SubCategories generated !')
 
 # UPDATE
 
