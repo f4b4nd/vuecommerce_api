@@ -47,7 +47,7 @@ class User(AbstractUser):
 
 
     gender = models.CharField(max_length=1, null=True, blank=True,
-                              default='M',
+                              default='1',
                               choices=[('1', 'M.'), ('2', 'Mme'), ('3', 'Autre')])
     birthdate = models.DateField(null=True, blank=True)
 

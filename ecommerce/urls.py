@@ -52,6 +52,7 @@ if settings.DEBUG:
         path('generate-refunds/<int:times>', debug.generate_refunds, name='generate-refunds'),      
         
         # updater
+        path('update-users', debug.update_users, name='update-users'),
         path('update-orders', debug.update_orders, name='update-orders'),
         re_path('update-products/(?P<add_img>\w+|)', debug.update_products, name='update-products'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
