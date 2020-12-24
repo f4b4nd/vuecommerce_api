@@ -41,19 +41,19 @@ class Order(models.Model):
         except AttributeError:
             return f"{self.ref_code}"
 
-    def get_total_price_nocharges(self):
+    def get_price_nocharges(self):
         # No taxes, No Delivery price
-        total_price = 0
+        total = 0
         for orderproduct in self.orderproducts.all():
-            total_price += orderproduct.get_final_price()
-        return round(total_price, 2)
+            total += orderproduct.get_final_price()
+        return round(total, 2)
 
-    def get_total_price(self):
-        raw = self.get_total_price_nocharges()
+    def get_price_charges(self):
+        raw = self.get_price_nocharges()
         taxes = self.get_taxes()
         delivery = self.get_delivery_price()
         total = raw + taxes + delivery
-        return total if total > 0 else 0        
+        return total if total > 0 else 0
 
     def get_taxes(self):
         # TODO : implement for real
@@ -79,7 +79,8 @@ class OrderProduct(models.Model):
 
     # track current price with signals.pre_save in case of product__price changes later
     price = models.FloatField(blank=True, null=True) 
-
+    discount_price = models.FloatField(blank=True, null=True)
+    
     class Meta:
         verbose_name_plural = 'Order__OrderProducts'
         ordering = ('order', )
@@ -91,34 +92,23 @@ class OrderProduct(models.Model):
     def get_user(self):
         return self.order.user
 
-    def get_sum_price_nodiscounted(self):
+    def get_sum_nodiscount(self):
         # Normal price including quantities
         return self.price * self.quantity
 
-    def get_unit_price_discounted(self):
-        # Unit discount price
-        coupon = ProductCoupon.objects.filter(product__pk=self.pk).first()
-        if coupon:
-            if coupon.amount and not coupon.percent and self.price > coupon.amount: 
-                return self.price - coupon.amount
-            if coupon.percent and not coupon.amount: 
-                return self.price * (1- coupon.percent)
-        return 0
-
-    def get_sum_price_discounted(self):
+    def get_sum_discount(self):
         # Discount price including quantities
-        return self.get_orderproduct_price_discount() * self.quantity
+        return self.discount_price * self.quantity
 
     def get_amount_saved(self):
-        if self.get_unit_price_discounted() > 0:
-            return self.get_sum_price_nodiscounted() - self.get_sum_price_discounted()
+        if self.discount_price:
+            return self.get_sum_nodiscount() - self.get_sum_discount()
         return 0
 
     def get_final_price(self):
-        if self.get_unit_price_discounted() > 0:
-            return self.get_sum_price_discounted()
-        else:
-            return self.get_sum_price_nodiscounted()
+        if self.discount_price:
+            return self.get_sum_discount()
+        return self.get_sum_nodiscount()
     
 
 class Address(models.Model):

@@ -35,10 +35,10 @@ class OrderAdmin(admin.ModelAdmin):
         'created_at', 'expedited_at', 'delivered_at')
 
     def total(self, obj):
-        return obj.get_total_price()
+        return obj.get_price_charges()
 
     def no_charge(self, obj):
-        return obj.get_total_price_nocharges()
+        return obj.get_price_nocharges()
 
     def tax(self, obj):
         return obj.get_taxes()
@@ -90,20 +90,19 @@ class ProductSubCategoryAdmin(admin.ModelAdmin):
 class OrderProductAdmin(admin.ModelAdmin):
     list_display = (
         'pk', 'order', 'product', 
-        'price', 
-        'quantity',
-        'total_price',
-
+        'unit_price', 
         'unit_discount',
+
+        'quantity',
         'amount_saved',
         'final_price',
     )
         
-    def unit_discount(self, obj):
-        return obj.get_unit_price_discounted()
+    def unit_price(self, obj):
+        return obj.price
 
-    def total_price(self, obj):
-        return obj.get_sum_price_nodiscounted()
+    def unit_discount(self, obj):
+        return obj.discount_price
 
     def amount_saved(self, obj):
         return obj.get_amount_saved()
