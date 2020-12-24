@@ -203,9 +203,9 @@ def update_users(request):
     for u in User.objects.all():
         
         if not u.last_name:
-            u.last_name = random_text('t', 10)
+            u.last_name = random_text('t', 20)
         if not u.first_name:
-            u.first_name = random_text('t', 20)
+            u.first_name = random_text('t', 10)
         if not u.gender:
             u.gender = str(random.randint(1, 3))
         if not u.birthdate:
