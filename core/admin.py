@@ -29,7 +29,7 @@ class AddressAdmin(admin.ModelAdmin):
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
         'pk', 'user', 'is_paid',
-        'total', 'no_charge', 'tax', 'delivery',
+        'total', 'amount_saved', 'no_charge', 'tax', 'delivery',
         'ref_code',
         'bill_address', 
         'created_at', 'expedited_at', 'delivered_at')
@@ -39,6 +39,9 @@ class OrderAdmin(admin.ModelAdmin):
 
     def no_charge(self, obj):
         return obj.get_price_nocharges()
+
+    def amount_saved(self, obj):
+        return obj.get_amount_saved()
 
     def tax(self, obj):
         return obj.get_taxes()

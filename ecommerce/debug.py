@@ -251,7 +251,7 @@ def update_orders(request):
 def update_products(request, add_img=None):
 
     for p in Product.objects.all():
-
+        
         if not p.category:
             p.category = get_random_instance(ProductCategory)
 

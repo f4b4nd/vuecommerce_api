@@ -37,7 +37,7 @@ class Order(models.Model):
         
     def __str__(self):
         try:
-            return f"{self.user.email} - {self.ref_code}"
+            return f"{self.user.email} - #{self.pk} {self.ref_code}"
         except AttributeError:
             return f"{self.ref_code}"
 
@@ -62,6 +62,13 @@ class Order(models.Model):
     def get_delivery_price(self):
         # TODO : implement for real
         return 5.00
+
+    def get_amount_saved(self):
+        # Amound saved, No taxes, No Delivery price
+        cum = 0
+        for orderproduct in self.orderproducts.all():
+            cum += orderproduct.get_amount_saved()
+        return round(cum, 2)
 
     def is_paid(self):
         return True if self.payment else False

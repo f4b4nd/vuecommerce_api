@@ -51,9 +51,9 @@ def on_orderproduct_save(sender, instance, **kwargs):
         c = ProductCoupon.objects.filter(product__pk=instance.product.pk).first()
         if not c:
             return
-        elif c.amount and not c.percent: 
+        elif c.active and c.amount and not c.percent: 
             curr_disc_price = curr_price - c.amount
-        elif c.percent and not c.amount: 
+        elif c.active and c.percent and not c.amount: 
             curr_disc_price = curr_price * (1- (c.percent / 100))
 
         instance.discount_price = curr_disc_price if curr_disc_price > 0 else 0
