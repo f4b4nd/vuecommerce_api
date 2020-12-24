@@ -36,17 +36,21 @@ class Payment(models.Model):
 class Refund(models.Model):
     # NOTE: User is retrieved from 'Order' child with get_user()
 
-    order = models.ForeignKey('Order',
-                              on_delete=models.CASCADE)
+    order = models.OneToOneField('Order',
+                                on_delete=models.CASCADE,
+                                blank=True, null=True)
     reason = models.TextField()
     accepted = models.BooleanField(default=False, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Order__Refund'
-
+        ordering = ('-order', )
     def __str__(self):
         return f"{self.pk} - {self.get_user}"
     
     @property
     def get_user(self):
-        return self.order.user
+        try:
+            return self.order.user
+        except AttributeError:
+            return f"{self.pk}"

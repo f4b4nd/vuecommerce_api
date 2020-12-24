@@ -49,6 +49,7 @@ if settings.DEBUG:
         path('generate-subcategories/<int:times>', debug.generate_subcategories, name='generate-subcategories'),       
         path('generate-product-coupons/<int:times>', debug.generate_productcoupon, name='generate-product-coupon'),      
         path('generate-order-products/<int:times>', debug.generate_orderproducts, name='generate-order-products'),      
+        path('generate-refunds/<int:times>', debug.generate_refunds, name='generate-refunds'),      
         
         # updater
         path('update-orders', debug.update_orders, name='update-orders'),

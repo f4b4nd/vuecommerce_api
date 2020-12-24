@@ -84,7 +84,7 @@ class ProductSubCategoryAdmin(admin.ModelAdmin):
 @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
     list_display = (
-        'order', 'product', 
+        'pk', 'order', 'product', 
         'price', 
         'quantity',
         'total_price',
@@ -107,12 +107,9 @@ class OrderProductAdmin(admin.ModelAdmin):
         return obj.get_final_price()
 
 
-# admin.site.register(models.ProductCoupon)
-# admin.site.register(models.Order)
-#admin.site.register(models.OrderProduct)
-#admin.site.register(models.Address)
-# admin.site.register(models.Payment)
-admin.site.register(models.Refund)
-# admin.site.register(models.ProductCategory)
-#admin.site.register(models.ProductSubCategory)
+@admin.register(models.Refund)
+class ProductSubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'order', 'accepted', 'reason')
+
+
 admin.site.register(models.TemplateHTML)

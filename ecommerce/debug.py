@@ -14,6 +14,7 @@ from core.models import (
     ProductSubCategory,
     ProductCoupon,
     OrderProduct,
+    Refund,
     )
 
 from accounts.models import User
@@ -28,11 +29,17 @@ def get_random_instance(model, *args, **kwargs):
         choice = kwargs.get('choice', None)
         objs = model.objects.filter(address_type=choice)
 
-    elif model == Payment:
+    elif model == Payment and kwargs.get('relation', None) == 'Order':
         # OnetoOne relation between Order and Payment
         orders =  Order.objects.filter(payment__isnull=False)
         pks = [o.payment.pk for o in orders]
         objs = Payment.objects.exclude(pk__in=pks)
+
+    elif model == Order and kwargs.get('relation', None) == 'Refund':
+        # OnetoOne relation between Order and Refund
+        refunds = Refund.objects.filter(order__isnull=False)
+        pks = [r.order.pk for r in refunds]
+        objs = Order.objects.exclude(pk__in=pks)
 
     else:
         objs = model.objects.all()
@@ -158,6 +165,16 @@ def generate_subcategories(request, times):
     return HttpResponse(f'{times} SubCategories generated !')
 
 
+def generate_refunds(request, times):
+    for i in range(0, times):
+        r = Refund()
+        r.order = get_random_instance(Order, relation='Refund')
+        r.reason = random_text('t', 200)
+        r.accepted = True if random.randint(0, 1) else False
+        r.save()
+    return HttpResponse(f'{times} Refunds generated !')
+
+
 def generate_productcoupon(request, times):
     for i in range(0, times):
 
@@ -198,7 +215,7 @@ def update_orders(request):
 
         if not p.payment and random.randint(0, 1) == 0:
             # all orders aren't necesarily confirmed
-            p.payment = get_random_instance(Payment, relation='1to1')
+            p.payment = get_random_instance(Payment, relation='Order')
 
         p.save()
 
