@@ -46,8 +46,8 @@ class User(AbstractUser):
     REQUIRED_FIELDS = []
 
 
-    gender = models.CharField(max_length=1, null=True, blank=True,
-                              default='1',
+    gender = models.CharField(max_length=1, 
+                              null=True, blank=True,
                               choices=[('1', 'M.'), ('2', 'Mme'), ('3', 'Autre')])
     birthdate = models.DateField(null=True, blank=True)
 

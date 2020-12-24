@@ -76,6 +76,16 @@ def random_text(text, max_length=None):
 
 ## GENERATE ##
 
+def generate_users(request, times):
+    # NOTE: passwords will not be hash correctly
+    for i in range(0, times):
+        u = User()
+        u.email = f"{random_text('uniq', 20)}@g.com"
+        u.password = random_text('t', 10).replace(' ', '')
+        u.save()
+    return HttpResponse(f'{times} Users created !')
+
+
 def generate_products(request, times):
     for i in range(0, times):
         p = Product()
@@ -201,7 +211,7 @@ def update_users(request):
     import datetime as dt
     
     for u in User.objects.all():
-        
+
         if not u.last_name:
             u.last_name = random_text('t', 20)
         if not u.first_name:

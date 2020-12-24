@@ -40,6 +40,7 @@ if settings.DEBUG:
     urlpatterns += [
 
         # generator
+        path('generate-users/<int:times>', debug.generate_users, name='generate-users'),
         path('generate-products/<int:times>', debug.generate_products, name='generate-products'),
         path('generate-orders/<int:times>', debug.generate_orders, name='generate-orders'),
         path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
