@@ -7,17 +7,31 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from django.db import IntegrityError
 
-from .models import Product, TemplateHTML
-from .serializers import ProductSerializer
+from .models import Product, TemplateHTML, Order, Comment
+from .serializers import ProductSerializer, OrderSerializer, CommentSerializer
 import random, string
 
-def gen_random_user():
-    return "".join(random.choices(string.ascii_lowercase + string.digits, k=10))
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+from rest_framework import generics, permissions, status
+from rest_framework.authentication import TokenAuthentication
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'slug'
+
+class OrderViewSet(viewsets.ModelViewSet):
+    # TODO: post + tokenauth + permissions.isAuth
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+class CommentViewSet(viewsets.ModelViewSet):
+    # TODO: post + tokenauth + permissions.isAuth
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
 
 
 @require_http_methods(["GET"])

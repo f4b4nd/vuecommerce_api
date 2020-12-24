@@ -40,9 +40,6 @@ class OrderAdmin(admin.ModelAdmin):
     def no_charge(self, obj):
         return obj.get_total_price_nocharges()
 
-    def is_paid(self, obj):
-        return obj.is_paid()
-
     def tax(self, obj):
         return obj.get_taxes()
 

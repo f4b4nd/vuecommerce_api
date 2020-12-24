@@ -66,6 +66,8 @@ class Order(models.Model):
     def is_paid(self):
         return True if self.payment else False
 
+    is_paid.boolean = True
+    
 class OrderProduct(models.Model):
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE,
