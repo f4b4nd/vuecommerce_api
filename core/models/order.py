@@ -52,7 +52,7 @@ class Order(models.Model):
         raw = self.get_total_price_nocharges()
         taxes = self.get_taxes()
         delivery = self.get_delivery_price()
-        total = raw - taxes - delivery
+        total = raw + taxes + delivery
         return total if total > 0 else 0        
 
     def get_taxes(self):
@@ -67,7 +67,7 @@ class Order(models.Model):
         return True if self.payment else False
 
     is_paid.boolean = True
-    
+
 class OrderProduct(models.Model):
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE,
