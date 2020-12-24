@@ -46,6 +46,8 @@ class ProductCategory(models.Model):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
 
+    def get_products(self):
+        return Product.objects.filter(category__pk=self.pk)
 
 class ProductSubCategory(models.Model):
 

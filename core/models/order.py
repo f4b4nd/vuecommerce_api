@@ -32,6 +32,9 @@ class Order(models.Model):
     refund_requested = models.BooleanField(default=False, null=True, blank=True)
     refund_granted = models.BooleanField(default=False, null=True, blank=True)
 
+    class Meta:
+        ordering = ('-created_at', )
+        
     def __str__(self):
         try:
             return f"{self.user.email} - {self.ref_code}"
@@ -59,6 +62,9 @@ class Order(models.Model):
     def get_delivery_price(self):
         # TODO : implement for real
         return 5.00
+
+    def is_paid(self):
+        return True if self.payment else False
 
 class OrderProduct(models.Model):
     order = models.ForeignKey('Order',

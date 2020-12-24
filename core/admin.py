@@ -6,6 +6,7 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'title', 'price', 'category', 'created_at',)
     exclude = ('slug',)
 
 
@@ -22,12 +23,62 @@ class AddressAdmin(admin.ModelAdmin):
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('user', 'get_total_price', 'ref_code', 'payment',
-     'bill_address', 'ship_address',  
-      'created_at', 'expedited_at', 'delivered_at')
+    list_display = (
+        'user', 'is_paid',
+        'total', 'no_charge', 'tax', 'delivery',
+        'ref_code',
+        'bill_address', 
+        'created_at', 'expedited_at', 'delivered_at')
 
-    def get_total_price(self, obj):
+    def total(self, obj):
         return obj.get_total_price()
+
+    def no_charge(self, obj):
+        return obj.get_total_price_nocharges()
+
+    def is_paid(self, obj):
+        return obj.is_paid()
+
+
+    def tax(self, obj):
+        return obj.get_taxes()
+
+    def delivery(self, obj):
+        # TODO : implement for real
+        return obj.get_delivery_price()
+
+
+@admin.register(models.ProductCategory)
+class ProductCategoryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'products', 'subcategories')
+
+    def subcategories(self, obj):
+        return obj.subcategories
+
+    def products(self, obj):
+        products = [ f"(#{p.pk} {p.title})" for p in obj.get_products()]
+        return products
+
+
+@admin.register(models.Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'charge_id', 'amount',  'method',)
+
+    def user(self, obj):
+        return obj.get_user.email
+
+
+@admin.register(models.ProductCoupon)
+class ProductCouponAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'code', 'product', 'amount',  'percent', 'active',)
+
+    def user(self, obj):
+        return obj.get_user.email
+
+@admin.register(models.ProductSubCategory)
+class ProductSubCategoryAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'parent')
+
 
 
 @admin.register(models.OrderProduct)
@@ -43,7 +94,6 @@ class OrderProductAdmin(admin.ModelAdmin):
         'final_price',
     )
         
-
     def unit_discount(self, obj):
         return obj.get_unit_price_discounted()
 
@@ -56,12 +106,13 @@ class OrderProductAdmin(admin.ModelAdmin):
     def final_price(self, obj):
         return obj.get_final_price()
 
-admin.site.register(models.ProductCoupon)
+
+# admin.site.register(models.ProductCoupon)
 # admin.site.register(models.Order)
 #admin.site.register(models.OrderProduct)
 #admin.site.register(models.Address)
-admin.site.register(models.Payment)
+# admin.site.register(models.Payment)
 admin.site.register(models.Refund)
-admin.site.register(models.ProductCategory)
-admin.site.register(models.ProductSubCategory)
+# admin.site.register(models.ProductCategory)
+#admin.site.register(models.ProductSubCategory)
 admin.site.register(models.TemplateHTML)
