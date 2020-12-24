@@ -30,7 +30,7 @@ def on_product_img_delete(sender, instance, **kwargs):
     
 
 @receiver(signals.pre_save, sender=Order)
-def on_product_img_delete(sender, instance, **kwargs):
+def on_order_save(sender, instance, **kwargs):
     # sets ref_code
 
     if not instance.ref_code:
@@ -38,7 +38,7 @@ def on_product_img_delete(sender, instance, **kwargs):
     
 
 @receiver(signals.pre_save, sender=OrderProduct)
-def on_product_img_delete(sender, instance, **kwargs):
+def on_orderproduct_save(sender, instance, **kwargs):
     # tracks current price in case of it changes later
     
     if not instance.price:

@@ -94,7 +94,7 @@ def generate_orders(request, times):
         o.user = get_random_instance(User)
         o.bill_address =  get_random_instance(Address, choice='B')
         o.ship_address = get_random_instance(Address, choice='S')
-        o.payment = get_random_instance(Payment)
+        o.payment = get_random_instance(Payment, relation='Order')
         o.save()
     return HttpResponse(f'{times} Orders generated !')
 
@@ -201,20 +201,15 @@ def update_orders(request):
 
     for p in Order.objects.all():
         
-        bill_address = get_random_instance(Address, choice='B')
-
         if not p.bill_address:
-            p.bill_address = bill_address
+            p.bill_address = get_random_instance(Address, choice='B')
 
         if not p.ship_address:
             # Ship and Bill are the same 1/2 times
-            if random.randomint(0, 1) == 1:
-                p.ship_address = get_random_instance(Address, choice='S')
-            else:
-                p.ship_address = bill_address
+            p.ship_address = get_random_instance(Address, choice='S')
 
-        if not p.payment and random.randint(0, 1) == 0:
-            # all orders aren't necesarily confirmed
+        if not p.payment:
+            # have less payments than order as all orders aren't necesarily confirmed
             p.payment = get_random_instance(Payment, relation='Order')
 
         p.save()

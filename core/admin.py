@@ -19,12 +19,16 @@ class AddressAdmin(admin.ModelAdmin):
     list_display = ('pk', 'get_user', 'address_type', 'first_name', 'last_name', 'address', 'country', 'zipcode')
 
     def get_user(self, obj):
-        return obj.get_user.email
+        try:
+            return obj.get_user.email
+        except AttributeError:
+            return None
+
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 'is_paid',
+        'pk', 'user', 'is_paid',
         'total', 'no_charge', 'tax', 'delivery',
         'ref_code',
         'bill_address', 
@@ -39,12 +43,10 @@ class OrderAdmin(admin.ModelAdmin):
     def is_paid(self, obj):
         return obj.is_paid()
 
-
     def tax(self, obj):
         return obj.get_taxes()
 
     def delivery(self, obj):
-        # TODO : implement for real
         return obj.get_delivery_price()
 
 
@@ -65,15 +67,21 @@ class PaymentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'charge_id', 'amount',  'method',)
 
     def user(self, obj):
-        return obj.get_user.email
-
+        try:
+            return obj.get_user.email
+        except AttributeError:
+            return None
 
 @admin.register(models.ProductCoupon)
 class ProductCouponAdmin(admin.ModelAdmin):
     list_display = ('pk', 'code', 'product', 'amount',  'percent', 'active',)
 
     def user(self, obj):
-        return obj.get_user.email
+        try:
+            return obj.get_user.email
+        except AttributeError:
+            return None
+
 
 @admin.register(models.ProductSubCategory)
 class ProductSubCategoryAdmin(admin.ModelAdmin):

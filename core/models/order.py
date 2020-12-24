@@ -160,6 +160,7 @@ class Address(models.Model):
     
     class Meta:
         verbose_name_plural = 'Order__Addresses'
+        ordering = ('-created_at',)
         unique_together = (
             ('address_type', 'last_name', 'first_name', 'address', 'country', 'zipcode', 'city'),
         )

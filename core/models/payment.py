@@ -30,8 +30,10 @@ class Payment(models.Model):
     @property
     def get_user(self):
         order = Order.objects.filter(payment__pk=self.pk).first()
-        return order.user
-
+        try:
+            return order.user
+        except AttributeError:
+            return
 
 class Refund(models.Model):
     # NOTE: User is retrieved from 'Order' child with get_user()
