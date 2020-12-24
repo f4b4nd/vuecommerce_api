@@ -15,4 +15,5 @@ class ProductCoupon(models.Model):
         verbose_name = 'Product__Coupon'
 
     def __str__(self):
-        return self.code
+        minus = f"-{self.amount}EUR" if self.amount else f"-{self.percent}%"
+        return f"#{self.pk} - {self.code} {minus} (product {self.product})"

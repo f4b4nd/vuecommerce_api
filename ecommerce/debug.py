@@ -12,6 +12,8 @@ from core.models import (
     Comment,
     ProductCategory,
     ProductSubCategory,
+    ProductCoupon,
+    OrderProduct,
     )
 
 from accounts.models import User
@@ -74,8 +76,10 @@ def generate_products(request, times):
         p.resume = random_text('t', 500)
         p.description = random_text('t')
         p.price = round(100 * random.random(), 2)
+        p.category = get_random_instance(ProductCategory)
         p.save()
     return HttpResponse(f'{times} Products created !')
+
 
 def generate_orders(request, times):
     for i in range(0, times):
@@ -86,6 +90,17 @@ def generate_orders(request, times):
         o.payment = get_random_instance(Payment)
         o.save()
     return HttpResponse(f'{times} Orders generated !')
+
+
+
+def generate_orderproducts(request, times):
+    for i in range(0, times):
+        o = OrderProduct()
+        o.order = get_random_instance(Order)
+        o.product =  get_random_instance(Product)
+        o.quantity = random.randint(1, 4)
+        o.save()
+    return HttpResponse(f'{times} OrderProducts generated !')
 
 
 def generate_addresses(request, times):
@@ -133,6 +148,7 @@ def generate_categories(request, times):
         c.save()
     return HttpResponse(f'{times} Categories generated !')
 
+
 def generate_subcategories(request, times):
     for i in range(0, times):
         c = ProductSubCategory()
@@ -141,20 +157,47 @@ def generate_subcategories(request, times):
         c.save()
     return HttpResponse(f'{times} SubCategories generated !')
 
+
+def generate_productcoupon(request, times):
+    for i in range(0, times):
+
+        c = ProductCoupon()
+
+        if random.randint(0, 4) == 0:
+            # set product for 1/5 products                 
+            c.product = get_random_instance(Product)
+
+        c.code = random_text('t', 6).replace(' ', '').upper()
+
+        if random.randint(0, 1) == 0:
+            c.amount = random.randint(5, 8)
+        else:
+            c.percent = round(0.1 * random.randint(101, 250), 2)
+
+        c.save()
+    return HttpResponse(f'{times} ProductCoupons generated !')
+
+
 # UPDATE
 
 def update_orders(request):
 
     for p in Order.objects.all():
         
+        bill_address = get_random_instance(Address, choice='B')
+
         if not p.bill_address:
-            p.bill_address = get_random_instance(Address, choice='B')
+            p.bill_address = bill_address
 
         if not p.ship_address:
-            p.ship_address = get_random_instance(Address, choice='S')
+            # Ship and Bill are the same 1/2 times
+            if random.randomint(0, 1) == 1:
+                p.ship_address = get_random_instance(Address, choice='S')
+            else:
+                p.ship_address = bill_address
 
-        if not p.payment:
-            # NOTE: problem OneToOne
+        if not p.payment and random.randint(0, 1) == 0:
+            # all orders aren't necesarily confirmed
             p.payment = get_random_instance(Payment, relation='1to1')
 
         p.save()
@@ -165,7 +208,7 @@ def update_orders(request):
 def update_products(request, add_img=None):
 
     for p in Product.objects.all():
-        
+
         if not p.category:
             p.category = get_random_instance(ProductCategory)
 

@@ -69,13 +69,19 @@ class OrderProduct(models.Model):
                                 on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 
-    # track with signals.pre_save in case of price product changes
-    price = models.FloatField(blank=True, null=True)    
+    # track current price with signals.pre_save in case of product__price changes later
+    price = models.FloatField(blank=True, null=True) 
+
     class Meta:
         verbose_name_plural = 'Order__OrderProducts'
+        ordering = ('order', )
 
     def __str__(self):
-        return f"{self.quantity} of {self.product.title}"
+        return f"#{self.pk} ({self.get_user.email} bought {self.quantity} of {self.product.title})"
+
+    @property
+    def get_user(self):
+        return self.order.user
 
     def get_sum_price_nodiscounted(self):
         # Normal price including quantities
@@ -83,7 +89,7 @@ class OrderProduct(models.Model):
 
     def get_unit_price_discounted(self):
         # Unit discount price
-        coupon = ProductCoupon.objects.filter(orderproducts__pk=self.pk).first()
+        coupon = ProductCoupon.objects.filter(product__pk=self.pk).first()
         if coupon:
             if coupon.amount and not coupon.percent and self.price > coupon.amount: 
                 return self.price - coupon.amount

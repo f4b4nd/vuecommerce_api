@@ -4,7 +4,7 @@ from django.conf import settings
 from rest_framework.authtoken.models import Token
 import os, uuid
 
-from .models import Product, Order
+from .models import Product, Order, OrderProduct
 
 
 @receiver(signals.pre_save, sender=Product)
@@ -36,3 +36,10 @@ def on_product_img_delete(sender, instance, **kwargs):
     if not instance.ref_code:
         instance.ref_code = uuid.uuid4().hex[:30]
     
+
+@receiver(signals.pre_save, sender=OrderProduct)
+def on_product_img_delete(sender, instance, **kwargs):
+    # tracks current price in case of it changes later
+    
+    if not instance.price:
+        instance.price = instance.product.price

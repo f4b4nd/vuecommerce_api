@@ -28,4 +28,4 @@ class Comment(models.Model):
         ordering = ['created_at']
 
     def __str__(self):
-        return f"#{self.post} - #{self.user.email}"
+        return f"#{self.pk} {self.user.email} (post: #{self.post})"
