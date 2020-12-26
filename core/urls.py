@@ -1,8 +1,8 @@
 from django.urls import path, include
 from rest_framework import routers
 
+from core import api
 from core import views
-
 
 # HARDCODED VIEWS
 
@@ -17,9 +17,9 @@ urlpatterns = [
 # REST-FRAMEWORK
 
 router = routers.DefaultRouter()
-router.register(r'products', views.ProductViewSet, basename='products')
-router.register(r'topics', views.ProductTopicViewSet, basename='topics')
-router.register(r'orders', views.OrderViewSet, basename='orders')
+router.register(r'products', api.ProductViewSet, basename='products')
+router.register(r'topics', api.ProductTopicViewSet, basename='topics')
+router.register(r'orders', api.OrderViewSet, basename='orders')
 
 
 urlpatterns += [path('api/',  include(router.urls))]

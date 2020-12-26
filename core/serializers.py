@@ -30,7 +30,7 @@ class ProductTopicSerializer(serializers.ModelSerializer):
     groups = ProductGroupsSerializer(many=True)
     class Meta:
         model = ProductTopic
-        fields = "__all__"
+        fields = ('id', 'name', 'slug', 'groups')
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
