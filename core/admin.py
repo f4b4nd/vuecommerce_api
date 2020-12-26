@@ -6,13 +6,19 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'price',  'get_groups', 'created_at', )
+    list_display = (
+        'pk', 'title',
+        'price', 'get_discount_price',
+        'get_coupon', 'get_groups',
+    )
     exclude = ('slug',)
 
     def get_groups(self, obj):
         groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
         return groups
 
+    def get_coupon(self, obj):
+        return obj.get_coupon()
 @admin.register(models.ProductGroups)
 class ProductGroupsAdmin(admin.ModelAdmin):
     list_display = ('get_name', 'topic', 'get_products', )

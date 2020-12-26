@@ -55,6 +55,7 @@ if settings.DEBUG:
         path('update-users', debug.update_users, name='update-users'),
         path('update-orders', debug.update_orders, name='update-orders'),
         path('update-topics', debug.update_topics, name='update-topics'),
+        path('add-groups-to-products', debug.add_groups_to_products, name='add-groups-to-products'),
         re_path('update-products/(?P<add_img>\w+|)', debug.update_products, name='update-products'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
     ]

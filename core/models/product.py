@@ -1,7 +1,7 @@
 from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
 from django.conf import settings
-
+from . import ProductCoupon
 class Product(models.Model):
 
     title = models.CharField(max_length=100, blank=True, null=True)
@@ -30,7 +30,21 @@ class Product(models.Model):
     def get_groups(self):
         groups = ProductGroups.objects.filter(products__pk=self.pk)
         return groups
-        
+
+    def get_discount_price(self):
+        c = ProductCoupon.objects.filter(product__pk=self.pk).first()
+        if not c:
+            return '-'
+        elif c.active and c.amount and not c.percent: 
+            return self.price - c.amount
+        elif c.active and c.percent and not c.amount: 
+            return self.price * (1- (c.percent / 100))
+        return '-'
+
+    def get_coupon(self):
+        c = ProductCoupon.objects.filter(product__pk=self.pk).first()
+        return f"#{c.pk} {c.code}" if c else '-'
+
 class ProductGroups(models.Model):
     """
     (ProductGroups, Product) = (n, n)

@@ -254,9 +254,17 @@ def update_topics(request):
 
     return HttpResponse(f'Topics updated !')
 
-def update_productgroups(request):
-    for g in ProductGroups.objects.all():
-        g.products.add(get_random_instance(Product))
+def add_groups_to_products(request):
+    for p in Product.objects.all():
+        # manytomany
+        g1 = get_random_instance(ProductGroups)
+        g2 = get_random_instance(ProductGroups)
+        
+        g1.products.add(p)
+
+        if g1.pk != g2.pk:
+            g2.products.add(p)
+    
     return HttpResponse(f'ProductGroups updated !')
 
 
