@@ -25,7 +25,7 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = 'Product__Comment'
-        ordering = ['created_at']
+        ordering = ['-created_at']
 
     def __str__(self):
         return f"#{self.pk} {self.user.email} (post: #{self.post})"

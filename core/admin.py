@@ -89,14 +89,10 @@ class PaymentAdmin(admin.ModelAdmin):
 
 @admin.register(models.ProductCoupon)
 class ProductCouponAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'code', 'product', 'amount',  'percent', 'active',)
+    list_display = ('get_code','active', 'product', 'amount',  'percent', )
 
-    def user(self, obj):
-        try:
-            return obj.get_user.email
-        except AttributeError:
-            return None
-
+    def get_code(self, obj):
+        return f"#{obj.pk} {obj.code}"
 
 @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
