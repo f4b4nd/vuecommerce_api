@@ -10,8 +10,8 @@ from core.models import (
     Address,
     Payment,
     Comment,
-    ProductCategory,
-    ProductSubCategory,
+    # ProductCategory,
+    # ProductSubCategory,
     ProductCoupon,
     OrderProduct,
     Refund,
@@ -93,7 +93,7 @@ def generate_products(request, times):
         p.resume = random_text('t', 500)
         p.description = random_text('t')
         p.price = round(100 * random.random(), 2)
-        p.category = get_random_instance(ProductCategory)
+        #p.category = get_random_instance(ProductCategory)
         p.save()
     return HttpResponse(f'{times} Products created !')
 
@@ -160,7 +160,7 @@ def generate_comments(request, times):
 
 def generate_categories(request, times):
     for i in range(0, times):
-        c = ProductCategory()
+        # c = ProductCategory()
         c.name = random_text('uniq', 10)
         c.save()
     return HttpResponse(f'{times} Categories generated !')
@@ -168,8 +168,8 @@ def generate_categories(request, times):
 
 def generate_subcategories(request, times):
     for i in range(0, times):
-        c = ProductSubCategory()
-        c.parent = get_random_instance(ProductCategory)
+        # c = ProductSubCategory()
+        # c.parent = get_random_instance(ProductCategory)
         c.name = random_text('uniq', 10)
         c.save()
     return HttpResponse(f'{times} SubCategories generated !')

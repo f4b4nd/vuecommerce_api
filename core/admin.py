@@ -6,9 +6,28 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'price', 'category', 'created_at',)
+    list_display = ('pk', 'title', 'price', 'created_at',)
     exclude = ('slug',)
 
+
+@admin.register(models.ProductGroups)
+class ProductGroupsAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name', 'topic', 'get_products', )
+
+    def get_products(self, obj):
+        return obj.get_products()
+
+    # def subcategories(self, obj):
+    #     return obj.subcategories
+
+    # def products(self, obj):
+    #     products = [ f"(#{p.pk} {p.title})" for p in obj.get_products()]
+    #     return products
+
+
+@admin.register(models.Topic)
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'name',)
 
 @admin.register(models.Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -50,16 +69,6 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.get_delivery_price()
 
 
-@admin.register(models.ProductCategory)
-class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'products', 'subcategories')
-
-    def subcategories(self, obj):
-        return obj.subcategories
-
-    def products(self, obj):
-        products = [ f"(#{p.pk} {p.title})" for p in obj.get_products()]
-        return products
 
 
 @admin.register(models.Payment)
@@ -83,9 +92,6 @@ class ProductCouponAdmin(admin.ModelAdmin):
             return None
 
 
-@admin.register(models.ProductSubCategory)
-class ProductSubCategoryAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'parent')
 
 
 

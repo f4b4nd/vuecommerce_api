@@ -9,9 +9,6 @@ class Product(models.Model):
     resume = models.TextField(blank=True, null=True)
     price = models.FloatField(blank=True, null=True)
     img = models.ImageField(blank=True, null=True)
-    category = models.ForeignKey('ProductCategory',
-                                 on_delete=models.SET_NULL, 
-                                 blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     slug = models.SlugField(max_length=250, unique=True, blank=True, null=True)
 
@@ -31,13 +28,23 @@ class Product(models.Model):
         return f"{self.pk} - {self.title}"
 
 
-class ProductCategory(models.Model):
+class ProductGroups(models.Model):
 
     name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
+    products = models.ManyToManyField('Product',
+                                      related_name='groups',
+                                      #on_delete=models.SET_NULL, 
+                                      blank=True)
+
+    topic = models.ForeignKey('Topic',
+                               related_name='groups', 
+                               on_delete=models.SET_NULL,
+                               blank=True, null=True)
+
     class Meta:
-        verbose_name_plural = 'Product__Categories'
+        verbose_name_plural = 'Product__Groups'
 
     def __str__(self):
         return f"#{self.pk} - {self.name}"
@@ -47,22 +54,22 @@ class ProductCategory(models.Model):
         super().save(*args, **kwargs)
 
     def get_products(self):
-        return Product.objects.filter(category__pk=self.pk)
+        products = [f"#{p.pk} {p.title} " for p in self.products.all()]
+        return "\n".join(products)
 
-class ProductSubCategory(models.Model):
+    # def get_products(self):
+    #     return Product.objects.filter(category__pk=self.pk)
 
-    parent = models.ForeignKey('ProductCategory',
-                                related_name='subcategories', 
-                               on_delete=models.SET_NULL,
-                               blank=True, null=True)
+class Topic(models.Model):
+
     name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Product__SubCategories'
+        verbose_name_plural = 'Product__Topic'
 
     def __str__(self):
-        return f"#{self.pk} - {self.name} - (parent: {self.parent})"
+        return f"#{self.pk} - {self.name}"
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
