@@ -46,8 +46,7 @@ if settings.DEBUG:
         path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
         path('generate-payments/<int:times>', debug.generate_payments, name='generate-payments'),
         path('generate-comments/<int:times>', debug.generate_comments, name='generate-comments'),       
-        path('generate-categories/<int:times>', debug.generate_categories, name='generate-categories'),       
-        path('generate-subcategories/<int:times>', debug.generate_subcategories, name='generate-subcategories'),       
+        path('generate-productgroups/<int:times>', debug.generate_productgroups, name='generate-productgroups'),       
         path('generate-product-coupons/<int:times>', debug.generate_productcoupon, name='generate-product-coupon'),      
         path('generate-order-products/<int:times>', debug.generate_orderproducts, name='generate-order-products'),      
         path('generate-refunds/<int:times>', debug.generate_refunds, name='generate-refunds'),      
@@ -55,6 +54,7 @@ if settings.DEBUG:
         # updater
         path('update-users', debug.update_users, name='update-users'),
         path('update-orders', debug.update_orders, name='update-orders'),
+        path('update-topics', debug.update_topics, name='update-topics'),
         re_path('update-products/(?P<add_img>\w+|)', debug.update_products, name='update-products'),
         path('update-templates', debug.update_templatesHTML, name='update-templates'),
     ]

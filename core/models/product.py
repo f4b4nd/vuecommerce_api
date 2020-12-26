@@ -27,8 +27,22 @@ class Product(models.Model):
     def __str__(self):
         return f"{self.pk} - {self.title}"
 
-
+    def get_groups(self):
+        groups = ProductGroups.objects.filter(products__pk=self.pk)
+        return groups
+        
 class ProductGroups(models.Model):
+    """
+    (ProductGroups, Product) = (n, n)
+    (ProductGroups, Topic) = (n, 1)
+    Ex:
+    - Product "Huile de coco" -> in Groups [huiles de beauté, huile de cuisine]
+    - Group "Huile de beauté" -> in Topic "Beauté"
+    - Group "Huile de Cuisine" -> in Topic "Cuisine"
+
+    -> Limit topics to a reasonable number of instances (ex: 10)
+    -> Groups are unlimited 
+    """
 
     name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -38,7 +52,7 @@ class ProductGroups(models.Model):
                                       #on_delete=models.SET_NULL, 
                                       blank=True)
 
-    topic = models.ForeignKey('Topic',
+    topic = models.ForeignKey('ProductTopic',
                                related_name='groups', 
                                on_delete=models.SET_NULL,
                                blank=True, null=True)
@@ -54,13 +68,12 @@ class ProductGroups(models.Model):
         super().save(*args, **kwargs)
 
     def get_products(self):
-        products = [f"#{p.pk} {p.title} " for p in self.products.all()]
-        return "\n".join(products)
+        # manytomany for admin 
+        products = [f"(#{p.pk} {p.title})" for p in self.products.all()]
+        return products
 
-    # def get_products(self):
-    #     return Product.objects.filter(category__pk=self.pk)
 
-class Topic(models.Model):
+class ProductTopic(models.Model):
 
     name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -74,3 +87,7 @@ class Topic(models.Model):
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)
         super().save(*args, **kwargs)
+
+    def get_groups(self):
+        groups = ProductGroups.objects.filter(topic__pk=self.pk)        
+        return groups

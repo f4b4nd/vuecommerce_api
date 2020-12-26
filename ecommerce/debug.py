@@ -10,8 +10,8 @@ from core.models import (
     Address,
     Payment,
     Comment,
-    # ProductCategory,
-    # ProductSubCategory,
+    ProductGroups,
+    ProductTopic,
     ProductCoupon,
     OrderProduct,
     Refund,
@@ -158,21 +158,14 @@ def generate_comments(request, times):
     return HttpResponse(f'{times} Comments generated !')
 
 
-def generate_categories(request, times):
+def generate_productgroups(request, times):
     for i in range(0, times):
-        # c = ProductCategory()
-        c.name = random_text('uniq', 10)
-        c.save()
-    return HttpResponse(f'{times} Categories generated !')
+        g = ProductGroups()
+        g.name = random_text('uniq', 10)
+        g.topic = get_random_instance(ProductTopic)
+        g.save()
+    return HttpResponse(f'{times} ProductGroups generated !')
 
-
-def generate_subcategories(request, times):
-    for i in range(0, times):
-        # c = ProductSubCategory()
-        # c.parent = get_random_instance(ProductCategory)
-        c.name = random_text('uniq', 10)
-        c.save()
-    return HttpResponse(f'{times} SubCategories generated !')
 
 
 def generate_refunds(request, times):
@@ -248,12 +241,28 @@ def update_orders(request):
     return HttpResponse('Order updated !')
 
 
+def update_topics(request):
+    
+    for t in ProductTopic.objects.all():
+        t.delete()
+    
+    topics = ('high-tech', 'cuisine', 'maison', 'beauté', 'livres',)
+    for topic in topics:
+        t = ProductTopic()
+        t.name = topic
+        t.save()
+
+    return HttpResponse(f'Topics updated !')
+
+def update_productgroups(request):
+    for g in ProductGroups.objects.all():
+        g.products.add(get_random_instance(Product))
+    return HttpResponse(f'ProductGroups updated !')
+
+
 def update_products(request, add_img=None):
 
     for p in Product.objects.all():
-        
-        if not p.category:
-            p.category = get_random_instance(ProductCategory)
 
         if add_img == 'true':
             # Sets img 

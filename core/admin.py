@@ -6,28 +6,30 @@ from . import models
 
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'title', 'price', 'created_at',)
+    list_display = ('pk', 'title', 'price',  'get_groups', 'created_at', )
     exclude = ('slug',)
 
+    def get_groups(self, obj):
+        groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
+        return groups
 
 @admin.register(models.ProductGroups)
 class ProductGroupsAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name', 'topic', 'get_products', )
+    list_display = ('get_name', 'topic', 'get_products', )
 
-    def get_products(self, obj):
-        return obj.get_products()
+    def get_name(self, obj):
+        return f"#{obj.pk} {obj.name}"
 
-    # def subcategories(self, obj):
-    #     return obj.subcategories
-
-    # def products(self, obj):
-    #     products = [ f"(#{p.pk} {p.title})" for p in obj.get_products()]
-    #     return products
-
-
-@admin.register(models.Topic)
+@admin.register(models.ProductTopic)
 class TopicAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'name',)
+    list_display = ('get_name', 'get_groups', )
+
+    def get_name(self, obj):
+        return f"#{obj.pk} {obj.name}"
+
+    def get_groups(self, obj):
+        groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
+        return groups
 
 @admin.register(models.Comment)
 class CommentAdmin(admin.ModelAdmin):
@@ -69,8 +71,6 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.get_delivery_price()
 
 
-
-
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'charge_id', 'amount',  'method',)
@@ -90,9 +90,6 @@ class ProductCouponAdmin(admin.ModelAdmin):
             return obj.get_user.email
         except AttributeError:
             return None
-
-
-
 
 
 @admin.register(models.OrderProduct)
