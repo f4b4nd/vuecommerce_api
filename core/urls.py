@@ -18,8 +18,9 @@ urlpatterns = [
 
 router = routers.DefaultRouter()
 router.register(r'products', views.ProductViewSet, basename='products')
+router.register(r'topics', views.ProductTopicViewSet, basename='topics')
 router.register(r'orders', views.OrderViewSet, basename='orders')
-router.register(r'comments', views.CommentViewSet, basename='comments')
+
 
 urlpatterns += [path('api/',  include(router.urls))]
 

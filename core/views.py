@@ -7,8 +7,8 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets
 from django.db import IntegrityError
 
-from .models import Product, TemplateHTML, Order, Comment
-from .serializers import ProductSerializer, OrderSerializer, CommentSerializer
+from .models import Product, TemplateHTML, Order, Comment, ProductTopic
+from .serializers import ProductSerializer, OrderSerializer, CommentSerializer, ProductTopicSerializer
 import random, string
 
 from rest_framework.response import Response
@@ -23,15 +23,14 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     lookup_field = 'slug'
 
+class ProductTopicViewSet(viewsets.ModelViewSet):
+    queryset = ProductTopic.objects.all()
+    serializer_class = ProductTopicSerializer
+
 class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-
-class CommentViewSet(viewsets.ModelViewSet):
-    # TODO: post + tokenauth + permissions.isAuth
-    queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
 
 
 @require_http_methods(["GET"])
