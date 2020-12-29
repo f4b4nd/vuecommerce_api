@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Product, Order, Comment, ProductTopic, ProductGroups
+from .models import Product, Order, Comment, ProductTopic, ProductGroups, Address
 from accounts.models import User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -31,6 +31,26 @@ class ProductTopicSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductTopic
         fields = ('id', 'name', 'slug', 'groups')
+
+class SaveAddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Address
+        fields = ('first_name', 'last_name', 'address', 'zipcode', 'country', 'city', 'address_type')
+
+
+    def create(self, validated_data):
+        order = Order()
+        order.user = self.context['request'].user
+        ship_address = Address.objects.create(**validated_data)
+        order.ship_address = ship_address
+        order.save()
+        return order
+
+
+    # def update(self, validated_data):
+    #     print(validated_data)
+    #     address = Address.objects.get(**validated_data)
+    #     return address
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
