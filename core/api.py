@@ -56,7 +56,7 @@ class UpdateCartAPI(generics.GenericAPIView):
     def post(self, request, *args, **kwargs):
 
         # data parse
-        data = request.data[0]
+        
 
         if request.user:
 
@@ -65,14 +65,18 @@ class UpdateCartAPI(generics.GenericAPIView):
                     payment=None
                 )
 
-            product = Product.objects.get(slug=data['slug'])
-                    
-            op, _ = OrderProduct.objects.get_or_create(
-                order=order,
-                product=product,
-            )
-            op.quantity = data['quantity']
-            op.save()
+            cart = request.data
+            
+            for data in cart:
+                product = Product.objects.get(slug=data['slug'])
+                        
+                op, _ = OrderProduct.objects.get_or_create(
+                    order=order,
+                    product=product,
+                )
+                op.quantity = data['quantity']
+                print(data, _)
+                op.save()
 
         return Response({})
 
