@@ -54,44 +54,32 @@ class UpdateCartAPI(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
+
         # data parse
         data = request.data[0]
 
         if request.user:
 
-            order = Order.objects.filter(
+            order, _ = Order.objects.get_or_create(
                     user=request.user, 
                     payment=None
-                ).first()
-
-            if not order:
-                order = Order(user=request.user)
-                order.save()
+                )
 
             product = Product.objects.get(slug=data['slug'])
-        
-            
-            o_product = OrderProduct()
-            
-            o_product.order = order
-            o_product.product = product
-            print(product)
-            # return Response({'a': 'ok'})
-            o_product.quantity = data['quantity']
-            o_product.save()
-            #if o_product:
-            #    o_product.quantity+=1
-            print(request.data)
-            return Response({
-                "status": "ok",
-            })
+                    
+            op, _ = OrderProduct.objects.get_or_create(
+                order=order,
+                product=product,
+            )
+            op.quantity = data['quantity']
+            op.save()
+
+        return Response({
+            "api": "UpdateCartAPI",
+        })
 
 class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
     queryset = Order.objects.all()
     serializer_class = core_serializers.OrderSerializer
-
-    
-
-
 

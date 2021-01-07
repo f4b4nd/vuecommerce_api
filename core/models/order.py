@@ -34,7 +34,8 @@ class Order(models.Model):
 
     class Meta:
         ordering = ('-created_at', )
-        
+        unique_together = (('user', 'payment', ), )
+
     def __str__(self):
         try:
             return f"{self.user.email} - #{self.pk} {self.ref_code}"
@@ -91,6 +92,7 @@ class OrderProduct(models.Model):
     class Meta:
         verbose_name_plural = 'Order__OrderProducts'
         ordering = ('order', )
+        unique_together = (('order', 'product', ), )
 
     def __str__(self):
         try:

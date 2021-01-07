@@ -80,7 +80,7 @@ class UserPaymentProfile(models.Model):
         # NOTE: unique_together does not work with sqlite
         verbose_name_plural = 'User__PaymentProfile'
         unique_together = (
-            ('user', 'service', 'customer_id',),
+            ('user', 'service',),
         )
 
     def __str__(self):
