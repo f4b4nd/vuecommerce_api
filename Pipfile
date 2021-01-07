@@ -12,6 +12,9 @@ djangorestframework = "*"
 django-cors-headers = "*"
 lorem = "*"
 django-rest-knox = "*"
+stripe = "*"
+djstripe = "*"
+dj-stripe = "*"
 
 [requires]
 python_version = "3.6"

@@ -19,12 +19,15 @@ class ProductAdmin(admin.ModelAdmin):
 
     def get_coupon(self, obj):
         return obj.get_coupon()
+
+
 @admin.register(models.ProductGroups)
 class ProductGroupsAdmin(admin.ModelAdmin):
     list_display = ('get_name', 'topic', 'get_products', )
 
     def get_name(self, obj):
         return f"#{obj.pk} {obj.name}"
+
 
 @admin.register(models.ProductTopic)
 class TopicAdmin(admin.ModelAdmin):
@@ -37,9 +40,11 @@ class TopicAdmin(admin.ModelAdmin):
         groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
         return groups
 
+
 @admin.register(models.Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'post', 'rating', 'body')
+
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
@@ -79,7 +84,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 @admin.register(models.Payment)
 class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user', 'charge_id', 'amount',  'method',)
+    list_display = ('pk', 'user', 'charge_id', 'amount',  'service',)
 
     def user(self, obj):
         try:
@@ -87,12 +92,14 @@ class PaymentAdmin(admin.ModelAdmin):
         except AttributeError:
             return None
 
+
 @admin.register(models.ProductCoupon)
 class ProductCouponAdmin(admin.ModelAdmin):
     list_display = ('get_code','active', 'product', 'amount',  'percent', )
 
     def get_code(self, obj):
         return f"#{obj.pk} {obj.code}"
+
 
 @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):

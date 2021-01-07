@@ -93,11 +93,17 @@ class OrderProduct(models.Model):
         ordering = ('order', )
 
     def __str__(self):
-        return f"#{self.pk} ({self.get_user.email} bought {self.quantity} of {self.product.title})"
+        try:
+            return f"#{self.pk} ({self.get_user.email} bought {self.quantity} of {self.product.title})"
+        except AttributeError:
+            return ""
 
     @property
     def get_user(self):
-        return self.order.user
+        try:
+            return self.order.user
+        except AttributeError:
+            return None
 
     def get_sum_nodiscount(self):
         # Normal price including quantities

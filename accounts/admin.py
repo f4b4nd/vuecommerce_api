@@ -1,5 +1,5 @@
 from django.contrib import admin
-from accounts.models import User
+from accounts.models import User, UserPaymentProfile
 
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils.translation import ugettext_lazy as _
@@ -26,3 +26,7 @@ class UserAdmin(DjangoUserAdmin):
     search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email',)
 
+
+@admin.register(UserPaymentProfile)
+class UserPaymentProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'service', 'customer_id', 'one_click_purchasing')

@@ -14,7 +14,7 @@ class Payment(models.Model):
     # id of the transaction, from stripe/paypal response 
     charge_id = models.CharField(max_length=100)
 
-    method = models.CharField(max_length=1, choices=CHOICES, default='S')
+    service = models.CharField(max_length=1, choices=CHOICES, default='S')
     amount = models.FloatField()
     confirmed_at = models.DateTimeField(auto_now_add=True)    
 

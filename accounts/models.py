@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
+from django.conf import settings
 
 
 class UserManager(BaseUserManager):
@@ -57,3 +58,30 @@ class User(AbstractUser):
         swappable = 'AUTH_USER_MODEL'
         db_table = 'auth_user'
 
+
+class UserPaymentProfile(models.Model):
+    CHOICES = (
+        ('S', 'Stripe'),
+        ('P', 'Paypal'),
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.CASCADE)
+    
+    service = models.CharField(max_length=1, 
+                              null=True, blank=True,
+                              default='S',
+                              choices=CHOICES)
+    # STRIPE / PAYPAL customer id
+    customer_id = models.CharField(max_length=50, blank=True, null=True)
+    one_click_purchasing = models.BooleanField(default=False)
+
+    class Meta:
+        # NOTE: unique_together does not work with sqlite
+        verbose_name_plural = 'User__PaymentProfile'
+        unique_together = (
+            ('user', 'service', 'customer_id',),
+        )
+
+    def __str__(self):
+        return self.user.username

@@ -34,16 +34,17 @@ class Product(models.Model):
     def get_discount_price(self):
         c = ProductCoupon.objects.filter(product__pk=self.pk).first()
         if not c:
-            return '-'
+            return ''
         elif c.active and c.amount and not c.percent: 
             return self.price - c.amount
         elif c.active and c.percent and not c.amount: 
             return self.price * (1- (c.percent / 100))
-        return '-'
+        return ''
 
     def get_coupon(self):
         c = ProductCoupon.objects.filter(product__pk=self.pk).first()
-        return f"#{c.pk} {c.code}" if c else '-'
+        return f"#{c.pk} {c.code}" if c else ''
+
 
 class ProductGroups(models.Model):
     """
