@@ -18,7 +18,7 @@ class ProductSerializer(serializers.ModelSerializer):
     comments = CommentSerializer(many=True)
     class Meta:
         model = Product
-        fields = ('title', 'description', 'resume', 'price', 'img', 'created_at', 'slug', 'comments')
+        fields = ('id', 'title', 'description', 'resume', 'price', 'img', 'created_at', 'slug', 'comments')
 
 
 class ProductGroupsSerializer(serializers.ModelSerializer):

@@ -74,9 +74,7 @@ class UpdateCartAPI(generics.GenericAPIView):
             op.quantity = data['quantity']
             op.save()
 
-        return Response({
-            "api": "UpdateCartAPI",
-        })
+        return Response({})
 
 class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
