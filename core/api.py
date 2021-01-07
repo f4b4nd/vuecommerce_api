@@ -54,10 +54,7 @@ class UpdateCartAPI(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
-
-        # data parse
         
-
         if request.user:
 
             order, _ = Order.objects.get_or_create(
@@ -65,8 +62,10 @@ class UpdateCartAPI(generics.GenericAPIView):
                     payment=None
                 )
 
+             # data parse
             cart = request.data
-            
+
+            # add products from frontend to order
             for data in cart:
                 product = Product.objects.get(slug=data['slug'])
                         
@@ -77,6 +76,12 @@ class UpdateCartAPI(generics.GenericAPIView):
                 op.quantity = data['quantity']
                 print(data, _)
                 op.save()
+
+            # remove products from backend that are not in frontend cart
+            cart_products = [c['id'] for c in cart]
+            order.orderproducts.exclude(
+                    product__pk__in=cart_products
+                ).delete()
 
         return Response({})
 
