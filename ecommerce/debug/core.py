@@ -21,7 +21,6 @@ from products.models import Product
 
 
 
-
 def generate_orders(request, times):
     for i in range(0, times):
         o = Order()

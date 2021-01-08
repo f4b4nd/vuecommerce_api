@@ -77,6 +77,7 @@ class Order(models.Model):
     is_paid.boolean = True
 
 
+
 class OrderProduct(models.Model):
 
     order = models.ForeignKey('Order',
