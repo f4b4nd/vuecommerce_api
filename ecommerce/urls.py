@@ -41,22 +41,28 @@ if settings.DEBUG:
     urlpatterns += [
 
         # generator
-        path('generate-users/<int:times>', debug.generate_users, name='generate-users'),
-        path('generate-products/<int:times>', debug.generate_products, name='generate-products'),
-        path('generate-orders/<int:times>', debug.generate_orders, name='generate-orders'),
-        path('generate-addresses/<int:times>', debug.generate_addresses, name='generate-addresses'),
-        path('generate-payments/<int:times>', debug.generate_payments, name='generate-payments'),
-        path('generate-comments/<int:times>', debug.generate_comments, name='generate-comments'),       
-        path('generate-productgroups/<int:times>', debug.generate_productgroups, name='generate-productgroups'),       
-        path('generate-product-coupons/<int:times>', debug.generate_productcoupon, name='generate-product-coupon'),      
-        path('generate-order-products/<int:times>', debug.generate_orderproducts, name='generate-order-products'),      
-        path('generate-refunds/<int:times>', debug.generate_refunds, name='generate-refunds'),      
+        path('generate/users/<int:times>', debug.generate_users),
+
+        path('generate/products/<int:times>', debug.generate_products),
+        path('generate/comments/<int:times>', debug.generate_comments),       
+        path('generate/productgroups/<int:times>', debug.generate_productgroups),       
+        path('generate/product-coupons/<int:times>', debug.generate_productcoupon),
+
+        path('generate/orders/<int:times>', debug.generate_orders),
+        path('generate/order-products/<int:times>', debug.generate_orderproducts),      
+        path('generate/addresses/<int:times>', debug.generate_addresses),
+        path('generate/payments/<int:times>', debug.generate_payments),
+        
+        path('generate-refunds/<int:times>', debug.generate_refunds),      
         
         # updater
-        path('update-users', debug.update_users, name='update-users'),
-        path('update-orders', debug.update_orders, name='update-orders'),
-        path('update-topics', debug.update_topics, name='update-topics'),
-        path('add-groups-to-products', debug.add_groups_to_products, name='add-groups-to-products'),
-        re_path('update-products/(?P<add_img>\w+|)', debug.update_products, name='update-products'),
-        path('update-templates', debug.update_templatesHTML, name='update-templates'),
+        path('update/users', debug.update_users),
+        path('update/orders', debug.update_orders),
+
+        path('update/topics', debug.update_topics),        
+        path('update/add-groups-to-products', debug.add_groups_to_products),
+        re_path('update/products/(?P<add_img>\w+|)', debug.update_products),
+
+        path('update/templates', debug.update_templatesHTML),
+
     ]
