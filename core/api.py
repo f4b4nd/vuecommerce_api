@@ -39,16 +39,13 @@ class CheckoutAddressAPI(generics.GenericAPIView):
     serializer_class = CheckoutAddressSerializer
 
     def post(self, request, *args, **kwargs):
-        
         for address_type in ['ship_address', 'bill_address']:
             data = {**request.data}[address_type]
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
                 serializer.save()
 
-        return Response({
-            "status": "ok",        
-        })
+        return Response({})
 
     def get(self, request, *args, **kwargs):
         order = Order.objects.filter(
@@ -79,7 +76,7 @@ class StripePaymentAPI(generics.GenericAPIView):
                 payment__isnull=True,
             )
         except Order.DoesNotExist:
-            return
+            return Response({})
 
         payment = Payment.objects.create(
             charge_id = data['transactionToken'],
@@ -90,9 +87,7 @@ class StripePaymentAPI(generics.GenericAPIView):
         order.payment = payment
         order.save()
 
-        return Response({
-            "status": "ok",
-        })
+        return Response({})
 
 class UpdateCartAPI(generics.GenericAPIView):
 
@@ -103,7 +98,19 @@ class UpdateCartAPI(generics.GenericAPIView):
         # data parse
         cart = request.data
         
-        if request.user and len(cart) > 0:
+        if len(cart) == 0:
+            try:
+                order = Order.objects.get(
+                    user=request.user, 
+                    payment__isnull=True,
+                )
+                order.delete()
+            except Order.DoesNotExist:
+                pass
+            
+            return Response({})
+
+        if request.user:
 
             order, created = Order.objects.get_or_create(
                     user=request.user, 
