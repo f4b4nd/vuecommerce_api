@@ -20,8 +20,6 @@ urlpatterns = [
 # REST-FRAMEWORK
 
 router = routers.DefaultRouter()
-router.register(r'products', api.ProductViewSet, basename='products')
-router.register(r'topics', api.ProductTopicViewSet, basename='topics')
 router.register(r'orders', api.OrderViewSet, basename='orders')
 
 

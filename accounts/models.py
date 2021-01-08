@@ -59,6 +59,9 @@ class User(AbstractUser):
         db_table = 'auth_user'
 
 
+    def __str__(self):
+        return self.email
+
 class UserPaymentProfile(models.Model):
     CHOICES = (
         ('S', 'Stripe'),
@@ -84,4 +87,4 @@ class UserPaymentProfile(models.Model):
         )
 
     def __str__(self):
-        return self.user.username
+        return self.user.email

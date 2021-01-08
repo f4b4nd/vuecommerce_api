@@ -7,8 +7,8 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
 from .serializers import (
-    ProductSerializer,
-    ProductTopicSerializer,
+    #ProductSerializer,
+    #ProductTopicSerializer,
     CheckoutAddressSerializer,
     OrderSerializer,
 )
@@ -16,21 +16,13 @@ from .serializers import (
 from .models import (
         Order,
         OrderProduct,
-        Product,
-        ProductTopic,
+        # Product,
+        # ProductTopic,
         Address,
         Payment,
     ) 
 
 
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    lookup_field = 'slug'
-
-class ProductTopicViewSet(viewsets.ModelViewSet):
-    queryset = ProductTopic.objects.all()
-    serializer_class = ProductTopicSerializer
 
 # Register API
 class CheckoutAddressAPI(generics.GenericAPIView):
@@ -100,10 +92,8 @@ class UpdateCartAPI(generics.GenericAPIView):
         
         if len(cart) == 0:
             try:
-                order = Order.objects.get(
-                    user=request.user, 
-                    payment__isnull=True,
-                )
+                order = Order.objects.get(user=request.user, 
+                                          payment__isnull=True)                                        
                 order.delete()
             except Order.DoesNotExist:
                 pass

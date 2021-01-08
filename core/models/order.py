@@ -1,6 +1,6 @@
 from django.db import models, IntegrityError, transaction
 from django.conf import settings
-from .coupon import ProductCoupon
+
 
 class Order(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -81,7 +81,7 @@ class OrderProduct(models.Model):
                               on_delete=models.CASCADE,
                               related_name='orderproducts',
                               blank=True, null=True)
-    product = models.ForeignKey('Product',
+    product = models.ForeignKey('products.Product',
                                 on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
 

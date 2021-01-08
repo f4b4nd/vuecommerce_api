@@ -1,6 +1,6 @@
 from django.db import models
 
-"""
+
 class ProductCoupon(models.Model):
     code = models.CharField(max_length=15)
     product = models.ForeignKey('Product', 
@@ -17,4 +17,3 @@ class ProductCoupon(models.Model):
     def __str__(self):
         minus = f"-{self.amount}EUR" if self.amount else f"-{self.percent}%"
         return f"#{self.pk} - {self.code} {minus} (product {self.product})"
-"""

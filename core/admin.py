@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 
 from . import models
 
+
+"""
 @admin.register(models.Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -45,6 +47,15 @@ class TopicAdmin(admin.ModelAdmin):
 class CommentAdmin(admin.ModelAdmin):
     list_display = ('pk', 'user', 'post', 'rating', 'body')
 
+
+
+@admin.register(models.ProductCoupon)
+class ProductCouponAdmin(admin.ModelAdmin):
+    list_display = ('get_code','active', 'product', 'amount',  'percent', )
+
+    def get_code(self, obj):
+        return f"#{obj.pk} {obj.code}"
+"""
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
@@ -96,12 +107,6 @@ class PaymentAdmin(admin.ModelAdmin):
             return None
 
 
-@admin.register(models.ProductCoupon)
-class ProductCouponAdmin(admin.ModelAdmin):
-    list_display = ('get_code','active', 'product', 'amount',  'percent', )
-
-    def get_code(self, obj):
-        return f"#{obj.pk} {obj.code}"
 
 
 @admin.register(models.OrderProduct)
@@ -130,7 +135,7 @@ class OrderProductAdmin(admin.ModelAdmin):
 
 
 @admin.register(models.Refund)
-class ProductSubCategoryAdmin(admin.ModelAdmin):
+class RefundAdmin(admin.ModelAdmin):
     list_display = ('pk', 'order', 'accepted', 'reason')
 
 

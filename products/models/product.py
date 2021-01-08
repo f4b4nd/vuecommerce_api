@@ -1,8 +1,8 @@
 from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
 from django.conf import settings
-"""
 from . import ProductCoupon
+
 
 class Product(models.Model):
 
@@ -49,7 +49,7 @@ class Product(models.Model):
 
 
 class ProductGroups(models.Model):
-    
+    """
     (ProductGroups, Product) = (n, n)
     (ProductGroups, Topic) = (n, 1)
     Ex:
@@ -59,7 +59,7 @@ class ProductGroups(models.Model):
 
     -> Limit topics to a reasonable number of instances (ex: 10)
     -> Groups are unlimited 
-    
+    """
 
     name = models.CharField(unique=True, max_length=80)
     slug = models.SlugField(unique=True, blank=True, null=True)
@@ -108,4 +108,6 @@ class ProductTopic(models.Model):
     def get_groups(self):
         groups = ProductGroups.objects.filter(topic__pk=self.pk)        
         return groups
-"""
+
+
+
