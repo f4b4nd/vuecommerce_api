@@ -8,16 +8,16 @@ from . import get_random_instance, random_text
 
 
 from core.models import (
-    TemplateHTML, 
     Order,
+    OrderProduct,
     Address,
     Payment,
-    OrderProduct,
     Refund,
+    TemplateHTML,
     )
 
-from accounts import  models as accounts_models 
-from products import  models as products_models 
+from accounts.models import User 
+from products.models import Product 
 
 
 
@@ -25,8 +25,8 @@ from products import  models as products_models
 def generate_orders(request, times):
     for i in range(0, times):
         o = Order()
-        o.user = get_random_instance(accounts_models.User)
-        o.bill_address =  get_random_instance(Address, choice='B')
+        o.user = get_random_instance(User)
+        o.bill_address = get_random_instance(Address, choice='B')
         o.ship_address = get_random_instance(Address, choice='S')
         o.payment = get_random_instance(Payment, relation='Order')
         o.save()
@@ -38,7 +38,7 @@ def generate_orderproducts(request, times):
     for i in range(0, times):
         o = OrderProduct()
         o.order = get_random_instance(Order)
-        o.product =  get_random_instance(products_models.Product)
+        o.product =  get_random_instance(Product)
         o.quantity = random.randint(1, 4)
         o.save()
     return HttpResponse(f'{times} OrderProducts generated !')
@@ -63,7 +63,7 @@ def generate_payments(request, times):
     for i in range(0, times):
         p = Payment()
         idx = random.randint(0, 1)
-        p.method = ['S', 'P'][idx]
+        p.service = ['S', 'P'][idx]
         p.charge_id = random_text('n', 15)
         p.amount = random.randint(1000, 9999) / 100
         p.save()
