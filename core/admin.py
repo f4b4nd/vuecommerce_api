@@ -48,7 +48,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(models.Address)
 class AddressAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'get_user', 'address_type', 'first_name', 'last_name', 'address', 'country', 'zipcode')
+    list_display = ('pk', 'get_order', 'address_type', 'first_name', 'last_name', 'address', 'country', 'zipcode')
 
     def get_user(self, obj):
         try:
@@ -56,6 +56,9 @@ class AddressAdmin(admin.ModelAdmin):
         except AttributeError:
             return None
 
+    def get_order(self, obj):
+        return obj.get_order
+    
 
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):

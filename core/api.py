@@ -25,18 +25,21 @@ class ProductTopicViewSet(viewsets.ModelViewSet):
     serializer_class = core_serializers.ProductTopicSerializer
 
 # Register API
-class SaveAddressAPI(generics.GenericAPIView):
+class CheckoutAddressAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = core_serializers.SaveAddressSerializer
 
     def post(self, request, *args, **kwargs):
-        data = {**request.data}
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)    
-        order = serializer.save()
+        
+        for address_type in ['ship_address', 'bill_address']:
+            data = {**request.data}[address_type]
+            serializer = self.get_serializer(data=data)
+            if serializer.is_valid():
+                order = serializer.save()
+
         return Response({
-            "status": "ok",
+            "status": "ok",        
         })
 
 

@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from rest_framework import serializers
 
 from .models import Product, Order, Comment, ProductTopic, ProductGroups, Address
@@ -39,18 +40,35 @@ class SaveAddressSerializer(serializers.ModelSerializer):
 
 
     def create(self, validated_data):
-        order = Order()
-        order.user = self.context['request'].user
-        ship_address = Address.objects.create(**validated_data)
-        order.ship_address = ship_address
+        # NOTE: the command should already exist, got to use a return
+
+        try:
+            order = Order.objects.get(
+                user=self.context['request'].user,
+                payment=None
+            )
+        except Order.DoesNotExist:
+            return
+
+        try:
+            address = Address.objects.create(**validated_data)
+        except IntegrityError:
+            return
+
+        if validated_data['address_type'] == 'S':
+            order.ship_address = address
+
+        elif validated_data['address_type'] == 'B':
+                order.bill_address = address
+    
+
         order.save()
         return order
 
+    # def perform_create(self, serializer):
+    #     serializer.save()
 
-    # def update(self, validated_data):
-    #     print(validated_data)
-    #     address = Address.objects.get(**validated_data)
-    #     return address
+
 
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
