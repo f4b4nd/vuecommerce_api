@@ -1,6 +1,7 @@
 from django.db import models, IntegrityError, transaction
 from django.utils.text import slugify
 from django.conf import settings
+
 from . import ProductCoupon
 
 
@@ -108,6 +109,4 @@ class ProductTopic(models.Model):
     def get_groups(self):
         groups = ProductGroups.objects.filter(topic__pk=self.pk)        
         return groups
-
-
 

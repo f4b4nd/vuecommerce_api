@@ -1,4 +1,4 @@
-from .random import *
+from .tools import *
 
 from .accounts import *
 from .core import *

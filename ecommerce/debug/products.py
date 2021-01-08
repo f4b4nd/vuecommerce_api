@@ -17,8 +17,6 @@ from products.models import (
 from accounts.models import User
 
 
-
-
 ## GENERATE ##
 
 

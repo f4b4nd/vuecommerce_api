@@ -5,8 +5,6 @@ from .models import (
     Order,  Address,
 )
 
-# from products.models import (Product, ProductTopic, ProductGroups, Comment,)
-
 
 class CheckoutAddressSerializer(serializers.ModelSerializer):
     class Meta:

@@ -5,72 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 from . import models
 
 
-"""
-@admin.register(models.Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = (
-        'pk', 'title',
-        'price', 'get_discount_price',
-        'get_coupon', 'get_groups',
-    )
-    exclude = ('slug',)
-
-    def get_groups(self, obj):
-        groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
-        return groups
-
-    def get_coupon(self, obj):
-        return obj.get_coupon()
-
-
-@admin.register(models.ProductGroups)
-class ProductGroupsAdmin(admin.ModelAdmin):
-    list_display = ('get_name', 'topic', 'get_products', )
-
-    def get_name(self, obj):
-        return f"#{obj.pk} {obj.name}"
-
-
-@admin.register(models.ProductTopic)
-class TopicAdmin(admin.ModelAdmin):
-    list_display = ('get_name', 'get_groups', )
-
-    def get_name(self, obj):
-        return f"#{obj.pk} {obj.name}"
-
-    def get_groups(self, obj):
-        groups = [f"(#{g.pk} {g.name})" for g in obj.get_groups()]
-        return groups
-
-
-@admin.register(models.Comment)
-class CommentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user', 'post', 'rating', 'body')
-
-
-
-@admin.register(models.ProductCoupon)
-class ProductCouponAdmin(admin.ModelAdmin):
-    list_display = ('get_code','active', 'product', 'amount',  'percent', )
-
-    def get_code(self, obj):
-        return f"#{obj.pk} {obj.code}"
-"""
-
-@admin.register(models.Address)
-class AddressAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'get_order', 'address_type', 'first_name', 'last_name', 'address', 'country', 'zipcode')
-
-    def get_user(self, obj):
-        try:
-            return obj.get_user.email
-        except AttributeError:
-            return None
-
-    def get_order(self, obj):
-        return obj.get_order
-    
-
 @admin.register(models.Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
@@ -96,19 +30,6 @@ class OrderAdmin(admin.ModelAdmin):
         return obj.get_delivery_price()
 
 
-@admin.register(models.Payment)
-class PaymentAdmin(admin.ModelAdmin):
-    list_display = ('pk', 'user', 'charge_id', 'amount',  'service',)
-
-    def user(self, obj):
-        try:
-            return obj.get_user.email
-        except AttributeError:
-            return None
-
-
-
-
 @admin.register(models.OrderProduct)
 class OrderProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -132,6 +53,31 @@ class OrderProductAdmin(admin.ModelAdmin):
 
     def final_price(self, obj):
         return obj.get_final_price()
+
+
+@admin.register(models.Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'get_order', 'address_type', 'first_name', 'last_name', 'address', 'country', 'zipcode')
+
+    def get_user(self, obj):
+        try:
+            return obj.get_user.email
+        except AttributeError:
+            return None
+
+    def get_order(self, obj):
+        return obj.get_order
+
+
+@admin.register(models.Payment)
+class PaymentAdmin(admin.ModelAdmin):
+    list_display = ('pk', 'user', 'charge_id', 'amount',  'service',)
+
+    def user(self, obj):
+        try:
+            return obj.get_user.email
+        except AttributeError:
+            return None
 
 
 @admin.register(models.Refund)

@@ -2,9 +2,9 @@
 from django.http import HttpResponse
 import os, random, lorem, re, string
 
-from .random import get_random_instance, random_text
+from . import get_random_instance, random_text
 
-from accounts import models #User
+from accounts.models import User
 
 
 def generate_users(request, times):

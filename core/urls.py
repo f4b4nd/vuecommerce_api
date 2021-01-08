@@ -12,7 +12,6 @@ urlpatterns = [
     path('api/checkout/address', api.CheckoutAddressAPI.as_view(), name='SaveAddress'),
     path('api/payment/stripe', api.StripePaymentAPI.as_view(), name='StripePayment'),
     path('api/cart', api.UpdateCartAPI.as_view(), name='UpdateCart'),
-    # path('api/orders/', views.RetrieveOrderAPI.as_view(), name='retrieve-orders'),
     
 ]
 

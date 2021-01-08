@@ -76,13 +76,17 @@ class Order(models.Model):
 
     is_paid.boolean = True
 
+
 class OrderProduct(models.Model):
+
     order = models.ForeignKey('Order',
                               on_delete=models.CASCADE,
                               related_name='orderproducts',
                               blank=True, null=True)
+
     product = models.ForeignKey('products.Product',
                                 on_delete=models.CASCADE)
+
     quantity = models.IntegerField(default=1)
 
     # track current price with signals.pre_save in case of product__price changes later
@@ -176,5 +180,3 @@ class Address(models.Model):
         unique_together = (
             ('address_type', 'last_name', 'first_name', 'address', 'country', 'zipcode', 'city'),
         )
-
-

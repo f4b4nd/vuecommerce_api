@@ -7,8 +7,6 @@ from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
 from .serializers import (
-    #ProductSerializer,
-    #ProductTopicSerializer,
     CheckoutAddressSerializer,
     OrderSerializer,
 )
@@ -16,15 +14,13 @@ from .serializers import (
 from .models import (
         Order,
         OrderProduct,
-        # Product,
-        # ProductTopic,
         Address,
         Payment,
     ) 
 
+from products.models import Product
 
 
-# Register API
 class CheckoutAddressAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
@@ -54,7 +50,8 @@ class CheckoutAddressAPI(generics.GenericAPIView):
                 'ship_address': ship.data,
                 'bill_address': bill.data,
             })
-    
+
+
 class StripePaymentAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
@@ -81,15 +78,43 @@ class StripePaymentAPI(generics.GenericAPIView):
 
         return Response({})
 
+
 class UpdateCartAPI(generics.GenericAPIView):
 
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
+
         # data parse
         cart = request.data
+
+        if not request.user:
+            return Response({})
+
+        order, created = Order.objects.get_or_create(
+                user=request.user, 
+                payment__isnull=True,
+            )
         
+        # add products from frontend to order
+        for data in cart:
+            product = Product.objects.get(slug=data['slug'])
+                    
+            op, _ = OrderProduct.objects.get_or_create(
+                order=order,
+                product=product,
+            )
+            op.quantity = data['quantity']
+            op.save()
+
+        # remove products from backend that are not in frontend cart
+        cart_products = [c['id'] for c in cart]
+        order.orderproducts.exclude(
+                product__pk__in=cart_products
+            ).delete()
+
+        # remove empty orders with no payment (when transaction succeeds)
         if len(cart) == 0:
             try:
                 order = Order.objects.get(user=request.user, 
@@ -97,34 +122,9 @@ class UpdateCartAPI(generics.GenericAPIView):
                 order.delete()
             except Order.DoesNotExist:
                 pass
-            
-            return Response({})
-
-        if request.user:
-
-            order, created = Order.objects.get_or_create(
-                    user=request.user, 
-                    payment__isnull=True,
-                )
-            
-            # add products from frontend to order
-            for data in cart:
-                product = Product.objects.get(slug=data['slug'])
-                        
-                op, _ = OrderProduct.objects.get_or_create(
-                    order=order,
-                    product=product,
-                )
-                op.quantity = data['quantity']
-                op.save()
-
-            # remove products from backend that are not in frontend cart
-            cart_products = [c['id'] for c in cart]
-            order.orderproducts.exclude(
-                    product__pk__in=cart_products
-                ).delete()
-
+                    
         return Response({})
+
 
 class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
