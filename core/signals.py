@@ -35,18 +35,6 @@ def on_order_save(sender, instance, **kwargs):
 
     if not instance.ref_code:
         instance.ref_code = uuid.uuid4().hex[:30]
-    
-@receiver(signals.pre_save, sender=Order)
-def merge_duplicate_orders(sender, instance, **kwargs):
-    # Merge duplicate orders (same user, non-completed)
-
-    orders = Order.objects.filter(
-        user=instance.user,
-        #payment=None,
-    )
-    #if orders.count() > 1:
-    for order in orders:
-        order.delete()
 
 
 @receiver(signals.pre_save, sender=OrderProduct)

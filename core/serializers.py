@@ -33,14 +33,13 @@ class ProductTopicSerializer(serializers.ModelSerializer):
         model = ProductTopic
         fields = ('id', 'name', 'slug', 'groups')
 
-class SaveAddressSerializer(serializers.ModelSerializer):
+class CheckoutAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ('first_name', 'last_name', 'address', 'zipcode', 'country', 'city', 'address_type')
 
 
     def create(self, validated_data):
-        # NOTE: the command should already exist, got to use a return
 
         try:
             order = Order.objects.get(

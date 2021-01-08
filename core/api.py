@@ -6,29 +6,37 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
-from . import serializers as core_serializers
+from .serializers import (
+    ProductSerializer,
+    ProductTopicSerializer,
+    CheckoutAddressSerializer,
+    OrderSerializer,
+)
+
 from .models import (
         Order,
         OrderProduct,
         Product,
         ProductTopic,
+        Address,
+        Payment,
     ) 
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
-    serializer_class = core_serializers.ProductSerializer
+    serializer_class = ProductSerializer
     lookup_field = 'slug'
 
 class ProductTopicViewSet(viewsets.ModelViewSet):
     queryset = ProductTopic.objects.all()
-    serializer_class = core_serializers.ProductTopicSerializer
+    serializer_class = ProductTopicSerializer
 
 # Register API
 class CheckoutAddressAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
-    serializer_class = core_serializers.SaveAddressSerializer
+    serializer_class = CheckoutAddressSerializer
 
     def post(self, request, *args, **kwargs):
         
@@ -36,17 +44,52 @@ class CheckoutAddressAPI(generics.GenericAPIView):
             data = {**request.data}[address_type]
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
-                order = serializer.save()
+                serializer.save()
 
         return Response({
             "status": "ok",        
         })
 
-
+    def get(self, request, *args, **kwargs):
+        order = Order.objects.filter(
+            user=request.user,
+            ship_address__isnull=False,
+            bill_address__isnull=False,
+        ).order_by('-created_at').first()
+        
+        if order:
+            ship = CheckoutAddressSerializer(order.ship_address)
+            bill = CheckoutAddressSerializer(order.bill_address)
+            
+            return Response({
+                'ship_address': ship.data,
+                'bill_address': bill.data,
+            })
+    
 class StripePaymentAPI(generics.GenericAPIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (permissions.IsAuthenticated,)
+
     def post(self, request, *args, **kwargs):
         data = {**request.data}
-        print(data)
+
+        try:
+            order = Order.objects.get(
+                user=self.request.user,
+                payment__isnull=True,
+            )
+        except Order.DoesNotExist:
+            return
+
+        payment = Payment.objects.create(
+            charge_id = data['transactionToken'],
+            service = data['service'],
+            amount = data['amount']
+        )
+        
+        order.payment = payment
+        order.save()
+
         return Response({
             "status": "ok",
         })
@@ -57,17 +100,16 @@ class UpdateCartAPI(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request, *args, **kwargs):
+        # data parse
+        cart = request.data
         
-        if request.user:
+        if request.user and len(cart) > 0:
 
-            order, _ = Order.objects.get_or_create(
+            order, created = Order.objects.get_or_create(
                     user=request.user, 
-                    payment=None
+                    payment__isnull=True,
                 )
-
-             # data parse
-            cart = request.data
-
+            
             # add products from frontend to order
             for data in cart:
                 product = Product.objects.get(slug=data['slug'])
@@ -77,7 +119,6 @@ class UpdateCartAPI(generics.GenericAPIView):
                     product=product,
                 )
                 op.quantity = data['quantity']
-                print(data, _)
                 op.save()
 
             # remove products from backend that are not in frontend cart
@@ -91,5 +132,5 @@ class UpdateCartAPI(generics.GenericAPIView):
 class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
     queryset = Order.objects.all()
-    serializer_class = core_serializers.OrderSerializer
+    serializer_class = OrderSerializer
 
