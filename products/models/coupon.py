@@ -12,7 +12,7 @@ class ProductCoupon(models.Model):
     active = models.BooleanField(default=False)
     
     class Meta:
-        verbose_name = 'Product__Coupon'
+        verbose_name = 'Coupon'
 
     def __str__(self):
         minus = f"-{self.amount}EUR" if self.amount else f"-{self.percent}%"

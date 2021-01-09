@@ -24,7 +24,7 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = 'Product__Comment'
+        verbose_name = 'Comment'
         ordering = ['-created_at']
 
     def __str__(self):

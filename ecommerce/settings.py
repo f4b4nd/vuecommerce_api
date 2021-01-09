@@ -117,7 +117,8 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
-# DEBUG 
+# DEBUG
+ADMIN_URL = os.getenv('ADMIN_URL', 'admin/')
 DEBUG = os.getenv('DEBUG', False) == 'TRUE'
 TEMPLATE_DEBUG = os.getenv('TEMPLATE_DEBUG', False) == 'TRUE'
 DEBUG_PROPAGATE_EXCEPTIONS = os.getenv('DEBUG_PROPAGATE_EXCEPTIONS', False) == 'TRUE'

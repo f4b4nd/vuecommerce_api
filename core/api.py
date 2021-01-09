@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.http import Http404
 
 from rest_framework import viewsets
 from rest_framework import generics, permissions, status
@@ -26,6 +27,12 @@ class CheckoutAddressAPI(generics.GenericAPIView):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = CheckoutAddressSerializer
 
+    def get_objects(self, **kwargs):
+        orders = Order.objects.filter(**kwargs)
+        if orders.exists():
+            return orders
+        raise Http404
+
     def post(self, request, *args, **kwargs):
         for address_type in ['ship_address', 'bill_address']:
             data = {**request.data}[address_type]
@@ -36,20 +43,19 @@ class CheckoutAddressAPI(generics.GenericAPIView):
         return Response({})
 
     def get(self, request, *args, **kwargs):
-        order = Order.objects.filter(
-            user=request.user,
-            ship_address__isnull=False,
-            bill_address__isnull=False,
-        ).order_by('-created_at').first()
+        order = self.get_objects(user=request.user,
+                                 ship_address__isnull=False,
+                                 bill_address__isnull=False,
+            ).order_by('-created_at').first()
         
-        if order:
-            ship = CheckoutAddressSerializer(order.ship_address)
-            bill = CheckoutAddressSerializer(order.bill_address)
+        # if order:
+        ship = CheckoutAddressSerializer(order.ship_address)
+        bill = CheckoutAddressSerializer(order.bill_address)
             
-            return Response({
-                'ship_address': ship.data,
-                'bill_address': bill.data,
-            })
+        return Response({
+            'ship_address': ship.data,
+            'bill_address': bill.data,
+        })
 
 
 class StripePaymentAPI(generics.GenericAPIView):
@@ -84,19 +90,27 @@ class UpdateCartAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
+    def get_or_create_object(self, **kwargs):
+        return Order.objects.get_or_create(**kwargs)
+
+    def get_object(self, **kwargs):
+        try:
+            return Order.objects.get(**kwargs)
+        except Order.DoesNotExist:
+            raise Http404
+
     def post(self, request, *args, **kwargs):
 
         # data parse
         cart = request.data
 
         if not request.user:
-            return Response({})
+            raise Http404
 
-        order, created = Order.objects.get_or_create(
-                user=request.user, 
-                payment__isnull=True,
-            )
-        
+        order, _ = self.get_or_create_object(
+            user=request.user,
+            payment__isnull=True)
+     
         # add products from frontend to order
         for data in cart:
             product = Product.objects.get(slug=data['slug'])
@@ -116,13 +130,9 @@ class UpdateCartAPI(generics.GenericAPIView):
 
         # remove empty orders with no payment (when transaction succeeds)
         if len(cart) == 0:
-            try:
-                order = Order.objects.get(user=request.user, 
-                                          payment__isnull=True)                                        
-                order.delete()
-            except Order.DoesNotExist:
-                pass
-                    
+            order = self.get_object(user=request.user, payment__isnull=True)
+            order.delete()
+
         return Response({})
 
 

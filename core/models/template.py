@@ -20,4 +20,4 @@ class TemplateHTML(models.Model):
             super().save(*args, **kwargs)
 
     class Meta:
-        verbose_name_plural = 'Templates HTML'
+        verbose_name_plural = 'Templates_CMS'

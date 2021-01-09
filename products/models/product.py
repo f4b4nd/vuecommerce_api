@@ -76,7 +76,7 @@ class ProductGroups(models.Model):
                                blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Product__Groups'
+        verbose_name_plural = 'Groups'
 
     def __str__(self):
         return f"#{self.pk} - {self.name}"
@@ -97,7 +97,7 @@ class ProductTopic(models.Model):
     slug = models.SlugField(unique=True, blank=True, null=True)
 
     class Meta:
-        verbose_name_plural = 'Product__Topic'
+        verbose_name_plural = 'Topic'
 
     def __str__(self):
         return f"#{self.pk} - {self.name}"
