@@ -9,7 +9,7 @@ from core import views
 urlpatterns = [
     
     path('api/informations/<slug:slug>', views.InformationView, name='Information'),
-    path('api/checkout/address', api.CheckoutAddressAPI.as_view(), name='SaveAddress'),
+    path('api/order/address', api.OrderAddressAPI.as_view(), name='SaveAddress'),
     path('api/payment/stripe', api.StripePaymentAPI.as_view(), name='StripePayment'),
     path('api/cart', api.UpdateCartAPI.as_view(), name='UpdateCart'),
     

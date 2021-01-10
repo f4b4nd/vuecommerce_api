@@ -5,24 +5,23 @@ from .models import (
     Order,  Address,
 )
 
+from django.shortcuts import get_object_or_404
+from ecommerce.utils import get_object_or_create
 
-class CheckoutAddressSerializer(serializers.ModelSerializer):
+
+class OrderAddressSerializer(serializers.ModelSerializer):
     class Meta:
         model = Address
         fields = ('first_name', 'last_name', 'address', 'zipcode', 'country', 'city', 'address_type')
         validators = [] # unique_together not checked because it blocks serializer.is_valid()
 
     def create(self, validated_data):
-
-        try:
-            order = Order.objects.get(
-                user=self.context['request'].user,
-                payment__isnull=True
-            )
-        except Order.DoesNotExist:
-            return
         
-        address, _ = Address.objects.get_or_create(**validated_data)
+        order = get_object_or_404(Order,
+                                  user=self.context['request'].user,
+                                  payment__isnull=True)
+        
+        address, _ = get_object_or_create(Address, **validated_data)
         
         if validated_data['address_type'] == 'S':
             order.ship_address = address
@@ -32,10 +31,6 @@ class CheckoutAddressSerializer(serializers.ModelSerializer):
     
         order.save()
         return order
-
-    # def perform_create(self, serializer):
-    #     serializer.save()
-
 
 
 class OrderSerializer(serializers.ModelSerializer):
