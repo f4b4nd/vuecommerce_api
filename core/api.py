@@ -39,16 +39,15 @@ class CheckoutAddressAPI(generics.GenericAPIView):
             serializer = self.get_serializer(data=data)
             if serializer.is_valid():
                 serializer.save()
-
         return Response({})
 
     def get(self, request, *args, **kwargs):
-        order = self.get_objects(user=request.user,
-                                 ship_address__isnull=False,
-                                 bill_address__isnull=False,
-            ).order_by('-created_at').first()
-        
-        # if order:
+        order = self.get_objects(
+                    user=request.user,
+                    ship_address__isnull=False,
+                    bill_address__isnull=False,
+                ).order_by('-created_at').first()
+
         ship = CheckoutAddressSerializer(order.ship_address)
         bill = CheckoutAddressSerializer(order.bill_address)
             
@@ -62,17 +61,18 @@ class StripePaymentAPI(generics.GenericAPIView):
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
+    def get_object(self, **kwargs):
+        try:
+            return Order.objects.get(**kwargs)
+        except Order.DoesNotExist:
+            raise Http404
+
     def post(self, request, *args, **kwargs):
         data = {**request.data}
-
-        try:
-            order = Order.objects.get(
-                user=self.request.user,
-                payment__isnull=True,
-            )
-        except Order.DoesNotExist:
-            return Response({})
-
+        
+        order = self.get_object(user=self.request.user,
+                                payment__isnull=True)
+            
         payment = Payment.objects.create(
             charge_id = data['transactionToken'],
             service = data['service'],
@@ -107,9 +107,8 @@ class UpdateCartAPI(generics.GenericAPIView):
         if not request.user:
             raise Http404
 
-        order, _ = self.get_or_create_object(
-            user=request.user,
-            payment__isnull=True)
+        order, _ = self.get_or_create_object(user=request.user,
+                                             payment__isnull=True)
      
         # add products from frontend to order
         for data in cart:
@@ -130,7 +129,8 @@ class UpdateCartAPI(generics.GenericAPIView):
 
         # remove empty orders with no payment (when transaction succeeds)
         if len(cart) == 0:
-            order = self.get_object(user=request.user, payment__isnull=True)
+            order = self.get_object(user=request.user, 
+                                    payment__isnull=True)
             order.delete()
 
         return Response({})
@@ -140,4 +140,3 @@ class OrderViewSet(viewsets.ModelViewSet):
     # TODO: post + tokenauth + permissions.isAuth
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
-
