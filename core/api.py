@@ -68,7 +68,7 @@ class StripePaymentAPI(generics.GenericAPIView):
                                   user=self.request.user,
                                   payment__isnull=True)
             
-        payment = Payment (
+        payment = Payment.objects.create (
             charge_id = data['transactionToken'],
             service = data['service'],
             amount = data['amount']
