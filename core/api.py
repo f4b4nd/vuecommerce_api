@@ -8,13 +8,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
 
+from ecommerce.utils import get_objects_or_404, get_object_or_create
+
 from .serializers import (
     OrderAddressSerializer,
     OrderSerializer,
 )
-
-from ecommerce.utils import get_objects_or_404, get_object_or_create
-
 
 from .models import (
         Order,
@@ -27,6 +26,7 @@ from products.models import Product
 
 
 class OrderAddressAPI(generics.GenericAPIView):
+
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = OrderAddressSerializer
@@ -58,6 +58,7 @@ class OrderAddressAPI(generics.GenericAPIView):
 
 
 class StripePaymentAPI(generics.GenericAPIView):
+
     authentication_classes = (TokenAuthentication,)
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -98,28 +99,30 @@ class UpdateCartAPI(generics.GenericAPIView):
                                         payment__isnull=True)
      
         # add products from frontend to order
-        for p in cart:
+        for data in cart:
 
-            product = Product.objects.get(slug=p['slug'])
-                    
+            product = Product.objects.get(slug=data['slug'])
+
             op, _ = get_object_or_create(OrderProduct,
                                          order=order,
                                          product=product)
-            op.quantity = p['quantity']
+            op.quantity = data['quantity']
             op.save()
 
         # remove products from backend that are not in frontend cart
         cart_pks = [c['id'] for c in cart]
-        order.orderproducts.exclude(
-            product__pk__in=cart_pks
-            ).delete()
+        op_not_in_cart = order.orderproducts.exclude(product__pk__in=cart_pks)
+        op_not_in_cart.delete()
 
-        # remove empty orders with no payment (when transaction succeeds)
-        if len(cart) == 0:
-            order = get_object_or_404(Order,
-                                      user=request.user, 
-                                      payment__isnull=True)
-            order.delete()
+        return Response({})
+
+    def delete(self, request, *args, **kwargs):
+        # new empty cart generated when transaction succeeds
+        
+        order = get_object_or_404(Order,
+                                  user=request.user, 
+                                  payment__isnull=True)
+        order.delete()
 
         return Response({})
 
