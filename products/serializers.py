@@ -19,18 +19,19 @@ class CommentSerializer(serializers.ModelSerializer):
         model = Comment
         fields = '__all__'
 
-
-class ProductSerializer(serializers.ModelSerializer):
-    comments = CommentSerializer(many=True)
-    class Meta:
-        model = Product
-        fields = ('id', 'title', 'description', 'resume', 'price', 'img', 'created_at', 'slug', 'comments')
-
-
 class ProductGroupsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductGroups
         fields = ('id', 'name', 'slug')
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    comments = CommentSerializer(many=True)
+    groups = ProductGroupsSerializer(many=True)
+    class Meta:
+        model = Product
+        fields = ('id', 'title', 'description', 'resume', 'price', 'img', 'created_at', 'slug', 'comments', 'groups')
+
         
 class ProductTopicSerializer(serializers.ModelSerializer):
     groups = ProductGroupsSerializer(many=True)
